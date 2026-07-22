@@ -1,0 +1,25 @@
+{
+  "defaultModel": "gpt-image-2",
+  "outputDir": "./generated-images",
+  "timeoutMs": 180000,
+  "models": {
+    "gpt-image-2": {
+      "provider": "openai-images",
+      "baseUrl": "https://api.openai.com",
+      "apiKey": "sk-your-openai-compatible-key",
+      "model": "gpt-image-2"
+    },
+    "grok-imagine-image": {
+      "provider": "openai-images",
+      "baseUrl": "https://api.x.ai",
+      "apiKey": "xai-your-key",
+      "model": "grok-imagine-image"
+    },
+    "gemini-3.1-flash-image": {
+      "provider": "gemini",
+      "baseUrl": "https://generativelanguage.googleapis.com",
+      "apiKey": "your-gemini-key",
+      "model": "gemini-3.1-flash-image"
+    }
+  }
+}

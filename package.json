@@ -1,0 +1,36 @@
+{
+  "name": "agent-tooling",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Personal coding-agent tooling monorepo: MCP servers, CLIs, skills, and plugins",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build -w @sallyn0225/image-gen",
+    "build:image-gen": "npm run build -w @sallyn0225/image-gen",
+    "image-gen": "npm run cli -w @sallyn0225/image-gen --",
+    "image-gen:mcp": "npm run start -w @sallyn0225/image-gen",
+    "typecheck": "npm run typecheck -w @sallyn0225/image-gen",
+    "publish:image-gen": "npm publish -w @sallyn0225/image-gen"
+  },
+  "keywords": [
+    "mcp",
+    "skills",
+    "coding-agent",
+    "cli",
+    "image-generation"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sallyn0225/pi-packages.git"
+  },
+  "homepage": "https://github.com/Sallyn0225/pi-packages#readme",
+  "bugs": {
+    "url": "https://github.com/Sallyn0225/pi-packages/issues"
+  }
+}

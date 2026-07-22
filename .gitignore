@@ -1,0 +1,13 @@
+node_modules/
+dist/
+generated-images/
+*.log
+.DS_Store
+.env
+.env.*
+config.local.json
+**/*.local.json
+.idea/
+.vscode/
+.agents/
+.claude/
