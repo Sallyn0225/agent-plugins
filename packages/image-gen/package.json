@@ -1,6 +1,6 @@
 {
   "name": "@sallyn0225/image-gen",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Multi-provider image generation and editing: MCP server + CLI for gpt-image-2, grok-imagine-image, gemini-3.1-flash-image",
   "type": "module",
   "bin": {
