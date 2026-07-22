@@ -7,11 +7,15 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "npm run build -w @sallyn0225/image-gen",
+    "build": "npm run build --workspaces --if-present",
     "build:image-gen": "npm run build -w @sallyn0225/image-gen",
     "image-gen": "npm run cli -w @sallyn0225/image-gen --",
     "image-gen:mcp": "npm run start -w @sallyn0225/image-gen",
-    "typecheck": "npm run typecheck -w @sallyn0225/image-gen",
+    "typecheck": "tsc -p tsconfig.json && npm run typecheck --workspaces --if-present",
+    "test": "vitest run",
+    "validate:plugins": "tsx scripts/agent-plugin/validate.ts",
+    "catalog:generate": "tsx scripts/agent-plugin/generate-catalog.ts",
+    "catalog:check": "tsx scripts/agent-plugin/generate-catalog.ts --check",
     "publish:image-gen": "npm publish -w @sallyn0225/image-gen"
   },
   "keywords": [
@@ -24,7 +28,7 @@
   ],
   "license": "MIT",
   "engines": {
-    "node": ">=18"
+    "node": ">=22"
   },
   "repository": {
     "type": "git",
@@ -33,5 +37,12 @@
   "homepage": "https://github.com/Sallyn0225/agent-plugins#readme",
   "bugs": {
     "url": "https://github.com/Sallyn0225/agent-plugins/issues"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.1",
+    "tsx": "^4.23.1",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.7",
+    "zod": "^3.25.76"
   }
 }

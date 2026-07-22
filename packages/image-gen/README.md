@@ -1,3 +1,5 @@
+> 中文: [README.zh-CN.md](./README.zh-CN.md)
+
 # @sallyn0225/image-gen
 
 Multi-provider **image generation & editing** with three adapters on one core:
@@ -6,7 +8,7 @@ Multi-provider **image generation & editing** with three adapters on one core:
 |---------|-------|----------|
 | **MCP** | `image-gen-mcp` | Claude Code, Codex, Cursor, any MCP host |
 | **CLI** | `image-gen` | Scripts, CI, agents without MCP |
-| **Skill** | monorepo `skills/image-gen/SKILL.md` | Teach agents when/how to call the CLI |
+| **Skill** | package `skills/image-gen/SKILL.md` | Teach agents when/how to call the CLI |
 
 ## Install (one command)
 
@@ -156,3 +158,7 @@ npm run image-gen:mcp
 ## License
 
 MIT
+
+## Agent Skill
+
+Canonical Skill path inside this package: `skills/image-gen/SKILL.md` (open Agent Skills format). It is included in the npm tarball.

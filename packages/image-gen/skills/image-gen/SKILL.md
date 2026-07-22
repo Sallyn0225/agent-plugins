@@ -5,7 +5,7 @@ description: Generate or edit images via the local image-gen CLI (gpt-image-2, g
 
 # Image Generation & Editing
 
-Use the **`image-gen` CLI** from this monorepo. Prefer CLI over free-form HTTP calls.
+Use the **`image-gen` CLI** from the `@sallyn0225/image-gen` Capability Plugin. Prefer CLI over free-form HTTP calls.
 
 ## Locate the CLI
 
@@ -19,7 +19,7 @@ image-gen <command>
 npx -y @sallyn0225/image-gen <command>
 ```
 
-2. Monorepo local build:
+2. Package-local build inside this monorepo:
 
 ```bash
 node packages/image-gen/dist/cli.js <command>
@@ -29,7 +29,7 @@ npm run image-gen -- <command>
 If monorepo `dist/` is missing, build first:
 
 ```bash
-npm run build:image-gen
+npm run build -w @sallyn0225/image-gen
 ```
 
 ## Prerequisites
@@ -37,8 +37,8 @@ npm run build:image-gen
 A config file with model `baseUrl` + `apiKey` must exist. Search order includes:
 
 - `$IMAGE_GEN_CONFIG`
-- `packages/image-gen/config.local.json`
-- `~/.config/agent-tooling/image-gen.json`
+- package-local `config.local.json` (development only)
+- `~/.config/agent-tooling/image-gen.json` (legacy v2 fallback)
 
 Example models:
 
@@ -49,13 +49,13 @@ Example models:
 List configured models:
 
 ```bash
-node packages/image-gen/dist/cli.js list
+image-gen list
 ```
 
 ## Generate
 
 ```bash
-node packages/image-gen/dist/cli.js generate --model gpt-image-2 "a minimal app icon of an orange fox"
+image-gen generate --model gpt-image-2 "a minimal app icon of an orange fox"
 ```
 
 Useful flags:
@@ -74,7 +74,7 @@ Output JSON includes `paths` to saved files under `generated-images/` (or config
 Always pass at least one local image path:
 
 ```bash
-node packages/image-gen/dist/cli.js edit \
+image-gen edit \
   --model gemini-3.1-flash-image \
   --image ./input.png \
   "make it watercolor, keep composition"
@@ -83,7 +83,7 @@ node packages/image-gen/dist/cli.js edit \
 Multiple references:
 
 ```bash
-node packages/image-gen/dist/cli.js edit \
+image-gen edit \
   --model gpt-image-2 \
   --image ./product.png \
   --image ./style-ref.png \
@@ -93,7 +93,7 @@ node packages/image-gen/dist/cli.js edit \
 Optional mask (inpainting, best-effort):
 
 ```bash
-node packages/image-gen/dist/cli.js edit \
+image-gen edit \
   --model gpt-image-2 \
   --image ./photo.png \
   --mask ./mask.png \
@@ -130,6 +130,11 @@ If the host has the MCP server configured, tools are:
 - `edit_image`
 
 CLI + this skill remain the fallback when MCP is unavailable.
+
+## Skill location
+
+Canonical copy: package-relative `skills/image-gen/SKILL.md` inside `@sallyn0225/image-gen`.
+Hosts that load Agent Skills from installed npm packages should use that path.
 
 ## Safety / hygiene
 

@@ -1,0 +1,73 @@
+{
+  "name": "@sallyn0225/__CAPABILITY_ID__",
+  "version": "0.0.0",
+  "private": false,
+  "description": "__CAPABILITY_DESCRIPTION__",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "bin": {
+    "__CAPABILITY_ID__": "dist/cli.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "skills",
+    "README.md",
+    "README.zh-CN.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "cli": "node dist/cli.js",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "agentPlugin": {
+    "schemaVersion": 1,
+    "id": "__CAPABILITY_ID__",
+    "displayName": "__CAPABILITY_DISPLAY_NAME__",
+    "maturity": "experimental",
+    "interfaces": {
+      "library": true,
+      "cli": true,
+      "mcp": false,
+      "skill": true
+    },
+    "skill": {
+      "format": "agent-skills",
+      "path": "skills/__CAPABILITY_ID__"
+    },
+    "verification": {
+      "automated": [
+        "unit",
+        "offline-cli",
+        "metadata",
+        "docs",
+        "package-contents"
+      ],
+      "liveProviders": "none"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sallyn0225/agent-plugins.git",
+    "directory": "packages/__CAPABILITY_ID__"
+  },
+  "homepage": "https://github.com/Sallyn0225/agent-plugins/tree/main/packages/__CAPABILITY_ID__#readme",
+  "bugs": {
+    "url": "https://github.com/Sallyn0225/agent-plugins/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
