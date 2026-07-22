@@ -4,8 +4,8 @@
   "description": "Multi-provider image generation and editing: MCP server + CLI for gpt-image-2, grok-imagine-image, gemini-3.1-flash-image",
   "type": "module",
   "bin": {
-    "image-gen": "./dist/cli.js",
-    "image-gen-mcp": "./dist/mcp.js"
+    "image-gen": "dist/cli.js",
+    "image-gen-mcp": "dist/mcp.js"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
