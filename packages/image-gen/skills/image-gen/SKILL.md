@@ -34,11 +34,17 @@ npm run build -w @sallyn0225/image-gen
 
 ## Prerequisites
 
-A config file with model `baseUrl` + `apiKey` must exist. Search order includes:
+A config file with model `baseUrl` + `apiKey` must exist. Preferred search order:
 
-- `$IMAGE_GEN_CONFIG`
+- `$IMAGE_GEN_CONFIG` (preferred)
+- `$IMAGE_GEN_MCP_CONFIG` (supported brand-neutral alias)
 - package-local `config.local.json` (development only)
-- `~/.config/agent-tooling/image-gen.json` (legacy v2 fallback)
+- `~/.config/agent-plugins/image-gen.json` (preferred default)
+
+v2 fallbacks (emit one stderr deprecation warning when used; removed in v3):
+
+- `$AGENT_TOOLING_IMAGE_GEN_CONFIG`
+- `~/.config/agent-tooling/image-gen.json`
 
 Example models:
 

@@ -26,8 +26,12 @@ Edit options:
   --mask <path>           Optional mask image
   (plus generate options)
 
-Config:
-  IMAGE_GEN_CONFIG / packages/image-gen/config.local.json
+Config (first match wins):
+  IMAGE_GEN_CONFIG (preferred)
+  IMAGE_GEN_MCP_CONFIG (supported alias)
+  config.local.json / packages/image-gen/config.local.json (development)
+  ~/.config/agent-plugins/image-gen.json (preferred default)
+  AGENT_TOOLING_IMAGE_GEN_CONFIG / ~/.config/agent-tooling/image-gen.json (v2 fallbacks; removed in v3)
   See config.example.json
 `);
 }

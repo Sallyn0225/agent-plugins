@@ -7,10 +7,44 @@ import type { AppConfig, ImageProviderKind, ModelConfig } from "./types.js";
 const DEFAULT_TIMEOUT_MS = 180_000;
 const DEFAULT_OUTPUT_DIR = "./generated-images";
 
-function expandHome(path: string): string {
-  if (path === "~") return homedir();
+const LEGACY_ENV_WARNING =
+  "image-gen: AGENT_TOOLING_IMAGE_GEN_CONFIG is a v2 compatibility fallback and will be removed in v3. Prefer IMAGE_GEN_CONFIG.";
+
+const LEGACY_DIR_WARNING =
+  "image-gen: ~/.config/agent-tooling/image-gen.json is a v2 compatibility fallback and will be removed in v3. Prefer ~/.config/agent-plugins/image-gen.json or IMAGE_GEN_CONFIG.";
+
+export interface LoadConfigOptions {
+  /** Override process.env (useful for tests). */
+  env?: NodeJS.ProcessEnv;
+  /** Override os.homedir() (useful for tests). */
+  homeDir?: string;
+  /** Override process.cwd() (useful for tests). */
+  cwd?: string;
+  /** Override package root used for package-local config discovery. */
+  packageRoot?: string;
+  /**
+   * Warning sink. Defaults to console.error so stdout/MCP stdio framing stay clean.
+   * Callers must not write these warnings to stdout.
+   */
+  warn?: (message: string) => void;
+}
+
+type ConfigSourceKind =
+  | "preferred-env"
+  | "legacy-env"
+  | "preferred-dir"
+  | "legacy-dir"
+  | "other";
+
+interface ConfigCandidate {
+  path: string;
+  kind: ConfigSourceKind;
+}
+
+function expandHome(path: string, home: string): string {
+  if (path === "~") return home;
   if (path.startsWith("~/") || path.startsWith("~\\")) {
-    return join(homedir(), path.slice(2));
+    return join(home, path.slice(2));
   }
   return path;
 }
@@ -122,52 +156,124 @@ function loadModelsFromObject(
   return models;
 }
 
-function packageRootDir(): string {
+function defaultPackageRootDir(): string {
   // dist/ or src/
   const here = dirname(fileURLToPath(import.meta.url));
   return resolve(here, "..");
 }
 
-function candidateConfigPaths(): string[] {
-  const paths: string[] = [];
-  const envPath =
-    process.env.IMAGE_GEN_CONFIG ??
-    process.env.IMAGE_GEN_MCP_CONFIG ??
-    process.env.AGENT_TOOLING_IMAGE_GEN_CONFIG;
-  if (envPath) paths.push(expandHome(envPath));
-
-  // cwd
-  paths.push(resolve(process.cwd(), "config.local.json"));
-  paths.push(resolve(process.cwd(), "config.json"));
-  paths.push(resolve(process.cwd(), "packages/image-gen/config.local.json"));
-  paths.push(resolve(process.cwd(), "packages/image-gen/config.json"));
-
-  // package-local (when running from installed package)
-  const pkgRoot = packageRootDir();
-  paths.push(join(pkgRoot, "config.local.json"));
-  paths.push(join(pkgRoot, "config.json"));
-
-  // user home
-  paths.push(join(homedir(), ".config", "agent-tooling", "image-gen.json"));
-  paths.push(join(homedir(), ".config", "image-gen", "config.json"));
-  paths.push(join(homedir(), ".config", "image-gen-mcp", "config.json"));
-  paths.push(join(homedir(), ".image-gen.json"));
-  paths.push(join(homedir(), ".image-gen-mcp.json"));
-  return paths;
+function resolveRuntime(options: LoadConfigOptions = {}): {
+  env: NodeJS.ProcessEnv;
+  homeDir: string;
+  cwd: string;
+  packageRoot: string;
+  warn: (message: string) => void;
+} {
+  return {
+    env: options.env ?? process.env,
+    homeDir: options.homeDir ?? homedir(),
+    cwd: options.cwd ?? process.cwd(),
+    packageRoot: options.packageRoot ?? defaultPackageRootDir(),
+    warn: options.warn ?? ((message: string) => console.error(message)),
+  };
 }
 
-function loadConfigFile(): { path?: string; data: Record<string, unknown> } {
-  for (const path of candidateConfigPaths()) {
-    if (!existsSync(path)) continue;
-    const raw = readFileSync(path, "utf8");
-    return { path, data: parseJsonObject(raw, path) };
+function candidateConfigPaths(runtime: {
+  env: NodeJS.ProcessEnv;
+  homeDir: string;
+  cwd: string;
+  packageRoot: string;
+}): ConfigCandidate[] {
+  const { env, homeDir, cwd, packageRoot } = runtime;
+  const candidates: ConfigCandidate[] = [];
+
+  // Preferred env vars always outrank directory and legacy sources.
+  const preferredEnvPath = env.IMAGE_GEN_CONFIG ?? env.IMAGE_GEN_MCP_CONFIG;
+  if (preferredEnvPath) {
+    candidates.push({
+      path: expandHome(preferredEnvPath, homeDir),
+      kind: "preferred-env",
+    });
+  }
+
+  // cwd / monorepo development locations
+  for (const relative of [
+    "config.local.json",
+    "config.json",
+    "packages/image-gen/config.local.json",
+    "packages/image-gen/config.json",
+  ]) {
+    candidates.push({ path: resolve(cwd, relative), kind: "other" });
+  }
+
+  // package-local (when running from installed package or package workspace)
+  candidates.push({ path: join(packageRoot, "config.local.json"), kind: "other" });
+  candidates.push({ path: join(packageRoot, "config.json"), kind: "other" });
+
+  // Preferred user default for Agent Plugins
+  candidates.push({
+    path: join(homeDir, ".config", "agent-plugins", "image-gen.json"),
+    kind: "preferred-dir",
+  });
+
+  // Legacy Agent Tooling fallbacks (v2 only; warn when actually used)
+  if (env.AGENT_TOOLING_IMAGE_GEN_CONFIG) {
+    candidates.push({
+      path: expandHome(env.AGENT_TOOLING_IMAGE_GEN_CONFIG, homeDir),
+      kind: "legacy-env",
+    });
+  }
+  candidates.push({
+    path: join(homeDir, ".config", "agent-tooling", "image-gen.json"),
+    kind: "legacy-dir",
+  });
+
+  // older generic locations (no deprecation warning; not brand-specific)
+  candidates.push({ path: join(homeDir, ".config", "image-gen", "config.json"), kind: "other" });
+  candidates.push({
+    path: join(homeDir, ".config", "image-gen-mcp", "config.json"),
+    kind: "other",
+  });
+  candidates.push({ path: join(homeDir, ".image-gen.json"), kind: "other" });
+  candidates.push({ path: join(homeDir, ".image-gen-mcp.json"), kind: "other" });
+
+  return candidates;
+}
+
+function maybeWarnForSource(
+  kind: ConfigSourceKind,
+  warn: (message: string) => void,
+): void {
+  if (kind === "legacy-env") {
+    warn(LEGACY_ENV_WARNING);
+    return;
+  }
+  if (kind === "legacy-dir") {
+    warn(LEGACY_DIR_WARNING);
+  }
+}
+
+function loadConfigFile(options: LoadConfigOptions = {}): {
+  path?: string;
+  data: Record<string, unknown>;
+} {
+  const runtime = resolveRuntime(options);
+
+  for (const candidate of candidateConfigPaths(runtime)) {
+    if (!existsSync(candidate.path)) continue;
+    const raw = readFileSync(candidate.path, "utf8");
+    maybeWarnForSource(candidate.kind, runtime.warn);
+    return { path: candidate.path, data: parseJsonObject(raw, candidate.path) };
   }
   return { data: {} };
 }
 
-function applyEnvModelOverrides(models: Record<string, ModelConfig>): void {
-  const sharedBase = process.env.IMAGE_GEN_BASE_URL;
-  const sharedKey = process.env.IMAGE_GEN_API_KEY;
+function applyEnvModelOverrides(
+  models: Record<string, ModelConfig>,
+  env: NodeJS.ProcessEnv,
+): void {
+  const sharedBase = env.IMAGE_GEN_BASE_URL;
+  const sharedKey = env.IMAGE_GEN_API_KEY;
 
   const firstBatch: Array<{
     alias: string;
@@ -200,8 +306,8 @@ function applyEnvModelOverrides(models: Record<string, ModelConfig>): void {
   ];
 
   for (const item of firstBatch) {
-    const baseUrl = process.env[item.baseEnv] ?? sharedBase;
-    const apiKey = process.env[item.keyEnv] ?? sharedKey;
+    const baseUrl = env[item.baseEnv] ?? sharedBase;
+    const apiKey = env[item.keyEnv] ?? sharedKey;
     if (!baseUrl && !apiKey && !models[item.alias]) continue;
 
     const existing = models[item.alias];
@@ -219,7 +325,7 @@ function applyEnvModelOverrides(models: Record<string, ModelConfig>): void {
 
   const generic = new Map<string, Partial<ModelConfig> & { alias: string }>();
 
-  for (const [envKey, envValue] of Object.entries(process.env)) {
+  for (const [envKey, envValue] of Object.entries(env)) {
     if (!envValue) continue;
     const match = envKey.match(
       /^IMAGE_GEN_MODEL_([A-Z0-9_]+)_(BASE_URL|API_KEY|PROVIDER|MODEL|BASEURL|KEY)$/,
@@ -261,8 +367,9 @@ function applyEnvModelOverrides(models: Record<string, ModelConfig>): void {
   }
 }
 
-export function loadConfig(): AppConfig {
-  const { path, data } = loadConfigFile();
+export function loadConfig(options: LoadConfigOptions = {}): AppConfig {
+  const runtime = resolveRuntime(options);
+  const { path, data } = loadConfigFile(options);
   const source = path ?? "environment";
 
   let models: Record<string, ModelConfig> = {};
@@ -270,16 +377,16 @@ export function loadConfig(): AppConfig {
     models = loadModelsFromObject(data.models, source);
   }
 
-  applyEnvModelOverrides(models);
+  applyEnvModelOverrides(models, runtime.env);
 
   const outputDirRaw =
-    process.env.IMAGE_GEN_OUTPUT_DIR ??
+    runtime.env.IMAGE_GEN_OUTPUT_DIR ??
     asString(data.outputDir) ??
     asString(data.output_dir) ??
     DEFAULT_OUTPUT_DIR;
 
-  const timeoutFromEnv = process.env.IMAGE_GEN_TIMEOUT_MS
-    ? Number(process.env.IMAGE_GEN_TIMEOUT_MS)
+  const timeoutFromEnv = runtime.env.IMAGE_GEN_TIMEOUT_MS
+    ? Number(runtime.env.IMAGE_GEN_TIMEOUT_MS)
     : undefined;
 
   const timeoutMs =
@@ -289,20 +396,20 @@ export function loadConfig(): AppConfig {
     DEFAULT_TIMEOUT_MS;
 
   const defaultModel =
-    process.env.IMAGE_GEN_DEFAULT_MODEL ??
+    runtime.env.IMAGE_GEN_DEFAULT_MODEL ??
     asString(data.defaultModel) ??
     asString(data.default_model) ??
     (models["gpt-image-2"] ? "gpt-image-2" : Object.keys(models)[0]);
 
-  const outputDir = isAbsolute(expandHome(outputDirRaw))
-    ? expandHome(outputDirRaw)
-    : resolve(process.cwd(), expandHome(outputDirRaw));
+  const outputDir = isAbsolute(expandHome(outputDirRaw, runtime.homeDir))
+    ? expandHome(outputDirRaw, runtime.homeDir)
+    : resolve(runtime.cwd, expandHome(outputDirRaw, runtime.homeDir));
 
   if (Object.keys(models).length === 0) {
     throw new Error(
       [
         "No image models configured.",
-        "Provide a config file (IMAGE_GEN_CONFIG / packages/image-gen/config.local.json)",
+        "Provide a config file (IMAGE_GEN_CONFIG / ~/.config/agent-plugins/image-gen.json)",
         "or env vars such as IMAGE_GEN_GPT_IMAGE_2_BASE_URL + IMAGE_GEN_GPT_IMAGE_2_API_KEY.",
         "See packages/image-gen/config.example.json.",
       ].join(" "),

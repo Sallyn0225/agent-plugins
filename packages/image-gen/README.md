@@ -29,15 +29,15 @@ Do **not** share personal keys. Create a config file:
 **Windows PowerShell:**
 
 ```powershell
-New-Item -ItemType Directory -Force $env:USERPROFILE\.config\agent-tooling | Out-Null
-notepad $env:USERPROFILE\.config\agent-tooling\image-gen.json
+New-Item -ItemType Directory -Force $env:USERPROFILE\.config\agent-plugins | Out-Null
+notepad $env:USERPROFILE\.config\agent-plugins\image-gen.json
 ```
 
 **macOS / Linux:**
 
 ```bash
-mkdir -p ~/.config/agent-tooling
-nano ~/.config/agent-tooling/image-gen.json
+mkdir -p ~/.config/agent-plugins
+nano ~/.config/agent-plugins/image-gen.json
 ```
 
 Example:
@@ -79,6 +79,22 @@ export IMAGE_GEN_DEFAULT_MODEL=gpt-image-2
 export IMAGE_GEN_CONFIG=/absolute/path/to/config.json
 ```
 
+### Configuration resolution (v2)
+
+Preferred sources (first match wins):
+
+1. `IMAGE_GEN_CONFIG`
+2. `IMAGE_GEN_MCP_CONFIG` (brand-neutral MCP alias; still supported)
+3. package / cwd development files such as `config.local.json`
+4. `~/.config/agent-plugins/image-gen.json`
+
+v2 compatibility fallbacks (used only when no preferred source exists; removed in v3):
+
+5. `AGENT_TOOLING_IMAGE_GEN_CONFIG`
+6. `~/.config/agent-tooling/image-gen.json`
+
+When a legacy fallback is **actually used**, image-gen emits **one** non-sensitive deprecation warning on **stderr**. Warnings never include API keys, never write to stdout JSON, and never alter MCP stdio framing.
+
 ## MCP host config
 
 ### Recommended (npx, no global install)
@@ -90,7 +106,7 @@ export IMAGE_GEN_CONFIG=/absolute/path/to/config.json
       "command": "npx",
       "args": ["-y", "@sallyn0225/image-gen", "mcp"],
       "env": {
-        "IMAGE_GEN_CONFIG": "C:/Users/YOU/.config/agent-tooling/image-gen.json"
+        "IMAGE_GEN_CONFIG": "C:/Users/YOU/.config/agent-plugins/image-gen.json"
       }
     }
   }
@@ -105,7 +121,7 @@ export IMAGE_GEN_CONFIG=/absolute/path/to/config.json
     "image-gen": {
       "command": "image-gen-mcp",
       "env": {
-        "IMAGE_GEN_CONFIG": "C:/Users/YOU/.config/agent-tooling/image-gen.json"
+        "IMAGE_GEN_CONFIG": "C:/Users/YOU/.config/agent-plugins/image-gen.json"
       }
     }
   }

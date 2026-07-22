@@ -27,6 +27,14 @@ npx -y @sallyn0225/image-gen mcp
 每位用户使用**自己的** `baseUrl` 与 `apiKey`。不要提交 `config.local.json`。
 
 优先环境变量：`IMAGE_GEN_CONFIG`。
+支持的 MCP 配置别名：`IMAGE_GEN_MCP_CONFIG`。
+
+默认配置路径优先：`~/.config/agent-plugins/image-gen.json`。
+
+v2 兼容回退（实际使用时向 stderr 输出一次非敏感弃用警告，v3 移除）：
+
+- `AGENT_TOOLING_IMAGE_GEN_CONFIG`
+- `~/.config/agent-tooling/image-gen.json`
 
 完整配置、CLI、MCP、Skill、故障排除说明见英文 README 对应章节；中英文文档的技术事实保持一致。
 

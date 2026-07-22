@@ -3,14 +3,12 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 import { loadConfig } from "./config.js";
+import { getMcpServerMetadata } from "./package-meta.js";
 import { listModels, runEdit, runGenerate } from "./service.js";
 
 const config = loadConfig();
 
-const server = new McpServer({
-  name: "image-gen",
-  version: "1.1.1",
-});
+const server = new McpServer(getMcpServerMetadata());
 
 server.registerTool(
   "list_image_models",
