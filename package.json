@@ -1,8 +1,8 @@
 {
-  "name": "agent-tooling",
+  "name": "agent-plugins",
   "private": true,
   "version": "0.1.0",
-  "description": "Personal coding-agent tooling monorepo: MCP servers, CLIs, skills, and plugins",
+  "description": "Host-independent Capability Plugins for coding agents: CLI, MCP, and Agent Skills",
   "workspaces": [
     "packages/*"
   ],
@@ -19,7 +19,8 @@
     "skills",
     "coding-agent",
     "cli",
-    "image-generation"
+    "image-generation",
+    "agent-plugins"
   ],
   "license": "MIT",
   "engines": {
@@ -27,10 +28,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Sallyn0225/pi-packages.git"
+    "url": "git+https://github.com/Sallyn0225/agent-plugins.git"
   },
-  "homepage": "https://github.com/Sallyn0225/pi-packages#readme",
+  "homepage": "https://github.com/Sallyn0225/agent-plugins#readme",
   "bugs": {
-    "url": "https://github.com/Sallyn0225/pi-packages/issues"
+    "url": "https://github.com/Sallyn0225/agent-plugins/issues"
   }
 }

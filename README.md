@@ -1,6 +1,6 @@
-# pi-packages
+# Agent Plugins
 
-Personal monorepo for coding-agent tooling, published at [github.com/Sallyn0225/pi-packages](https://github.com/Sallyn0225/pi-packages):
+Host-independent Capability Plugins for coding agents, published at [github.com/Sallyn0225/agent-plugins](https://github.com/Sallyn0225/agent-plugins):
 
 | Layer | Purpose | When to use |
 |------|---------|-------------|

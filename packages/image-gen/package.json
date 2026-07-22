@@ -63,11 +63,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Sallyn0225/pi-packages.git",
+    "url": "git+https://github.com/Sallyn0225/agent-plugins.git",
     "directory": "packages/image-gen"
   },
-  "homepage": "https://github.com/Sallyn0225/pi-packages/tree/main/packages/image-gen#readme",
+  "homepage": "https://github.com/Sallyn0225/agent-plugins/tree/main/packages/image-gen#readme",
   "bugs": {
-    "url": "https://github.com/Sallyn0225/pi-packages/issues"
+    "url": "https://github.com/Sallyn0225/agent-plugins/issues"
   }
 }
