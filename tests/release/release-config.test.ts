@@ -50,6 +50,12 @@ describe("release configuration", () => {
         expect.objectContaining({ run: "npm run quality" }),
       ]),
     );
+    const qualityStepIndex = steps.findIndex((step) => step.run === "npm run quality");
+    const npmUpgradeStepIndex = steps.findIndex(
+      (step) => step.run === "npm install --global npm@11.18.0",
+    );
+    expect(qualityStepIndex).toBeGreaterThanOrEqual(0);
+    expect(npmUpgradeStepIndex).toBeGreaterThan(qualityStepIndex);
     expect(changesetsStep).toMatchObject({
       with: {
         publish: "npm run release",
