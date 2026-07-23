@@ -26,7 +26,7 @@
     "catalog:generate": "tsx scripts/agent-plugin/generate-catalog.ts",
     "catalog:check": "tsx scripts/agent-plugin/generate-catalog.ts --check",
     "docs:check": "tsx scripts/docs/validate.ts",
-    "changeset:status": "changeset status",
+    "changeset:status": "tsx scripts/release/changeset-status.ts",
     "quality": "npm run format:check && npm run lint && npm run typecheck && npm run build && npm test && npm run smoke:offline && npm run docs:check && npm run validate:plugins && npm run catalog:check && npm run validate:packages && npm run changeset:status",
     "release": "changeset publish"
   },

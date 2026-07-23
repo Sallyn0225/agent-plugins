@@ -105,6 +105,20 @@ describe("release configuration", () => {
     );
   });
 
+  it("skips changeset status only on Version Packages branches", async () => {
+    const rootPackage = await readJson("package.json");
+    const script = await readFile(
+      path.join(repoRoot, "scripts/release/changeset-status.ts"),
+      "utf8",
+    );
+
+    expect((rootPackage.scripts as Record<string, string>)["changeset:status"]).toBe(
+      "tsx scripts/release/changeset-status.ts",
+    );
+    expect(script).toContain("changeset-release/");
+    expect(script).toContain("GITHUB_HEAD_REF");
+  });
+
   it("checks npm and GitHub Actions dependencies every week", async () => {
     const dependabot = await readYaml(".github/dependabot.yml");
 
