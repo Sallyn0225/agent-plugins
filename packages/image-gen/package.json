@@ -32,6 +32,7 @@
     "dev": "tsx src/cli.ts",
     "dev:mcp": "tsx src/mcp.ts",
     "smoke": "node scripts/smoke.mjs",
+    "smoke:offline": "vitest run --root ../.. tests/image-gen/offline-smoke.test.ts",
     "smoke:live": "node scripts/smoke.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "prepare": "npm run build"
@@ -86,7 +87,8 @@
         "offline-cli",
         "offline-mcp",
         "docs",
-        "metadata"
+        "metadata",
+        "package-contents"
       ],
       "liveProviders": "manual"
     }

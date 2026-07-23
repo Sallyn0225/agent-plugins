@@ -41,30 +41,18 @@ const commonImageOptions = {
     .max(8)
     .optional()
     .describe("Number of images (OpenAI-compatible providers). Default: 1"),
-  size: z
-    .string()
-    .optional()
-    .describe('OpenAI-style size, e.g. "1024x1024", "1536x1024", "auto"'),
-  quality: z
-    .string()
-    .optional()
-    .describe('GPT Image quality: "low" | "medium" | "high" | "auto"'),
+  size: z.string().optional().describe('OpenAI-style size, e.g. "1024x1024", "1536x1024", "auto"'),
+  quality: z.string().optional().describe('GPT Image quality: "low" | "medium" | "high" | "auto"'),
   aspect_ratio: z
     .string()
     .optional()
     .describe('Aspect ratio for Grok/Gemini style APIs, e.g. "1:1", "16:9"'),
-  image_size: z
-    .string()
-    .optional()
-    .describe('Gemini image size hint, e.g. "1K", "2K", "4K"'),
+  image_size: z.string().optional().describe('Gemini image size hint, e.g. "1K", "2K", "4K"'),
   response_format: z
     .enum(["b64_json", "url"])
     .optional()
     .describe("OpenAI-compatible response format preference. Default: b64_json"),
-  save: z
-    .boolean()
-    .optional()
-    .describe("Whether to save images under outputDir. Default: true"),
+  save: z.boolean().optional().describe("Whether to save images under outputDir. Default: true"),
   include_base64_in_text: z
     .boolean()
     .optional()
@@ -105,8 +93,7 @@ server.registerTool(
       });
 
       const content: Array<
-        | { type: "text"; text: string }
-        | { type: "image"; data: string; mimeType: string }
+        { type: "text"; text: string } | { type: "image"; data: string; mimeType: string }
       > = [
         {
           type: "text",
@@ -210,8 +197,7 @@ server.registerTool(
       });
 
       const content: Array<
-        | { type: "text"; text: string }
-        | { type: "image"; data: string; mimeType: string }
+        { type: "text"; text: string } | { type: "image"; data: string; mimeType: string }
       > = [
         {
           type: "text",
@@ -258,9 +244,7 @@ export async function startServer(): Promise<void> {
 
 const entry = process.argv[1]?.replace(/\\/g, "/") ?? "";
 const isDirectRun =
-  entry.endsWith("/dist/mcp.js") ||
-  entry.endsWith("/src/mcp.ts") ||
-  entry.endsWith("/mcp.js");
+  entry.endsWith("/dist/mcp.js") || entry.endsWith("/src/mcp.ts") || entry.endsWith("/mcp.js");
 
 if (isDirectRun) {
   startServer().catch((error) => {

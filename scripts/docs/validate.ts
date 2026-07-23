@@ -171,7 +171,10 @@ function links(markdown: string): MarkdownLink[] {
 
   const found: MarkdownLink[] = [];
   const record = (target: string, index: number): void => {
-    const clean = target.trim().replace(/^<|>$/g, "").split(/\s+["']/)[0];
+    const clean = target
+      .trim()
+      .replace(/^<|>$/g, "")
+      .split(/\s+["']/)[0];
     found.push({ target: clean, line: visible.slice(0, index).split("\n").length });
   };
   for (const match of visible.matchAll(/\[[^\]]*\]\(([^)]+)\)/g)) {
@@ -314,7 +317,8 @@ export async function validateInternalLinks(repoRoot: string): Promise<Documenta
         !target ||
         /^(?:https?:|mailto:|data:|npm:)/i.test(target) ||
         target.includes("__CAPABILITY_ID__")
-      ) continue;
+      )
+        continue;
       const [encodedPath, fragment] = target.split("#", 2);
       let decodedPath: string;
       try {
@@ -323,11 +327,13 @@ export async function validateInternalLinks(repoRoot: string): Promise<Documenta
         issues.push(issue("internal-link", file, `Malformed link encoding: ${target}.`, line));
         continue;
       }
-      const targetFile = decodedPath
-        ? path.resolve(path.dirname(absolute), decodedPath)
-        : absolute;
+      const targetFile = decodedPath ? path.resolve(path.dirname(absolute), decodedPath) : absolute;
       const relativeTarget = path.relative(path.resolve(repoRoot), targetFile);
-      if (relativeTarget === ".." || relativeTarget.startsWith(`..${path.sep}`) || path.isAbsolute(relativeTarget)) {
+      if (
+        relativeTarget === ".." ||
+        relativeTarget.startsWith(`..${path.sep}`) ||
+        path.isAbsolute(relativeTarget)
+      ) {
         issues.push(issue("internal-link", file, `Link escapes repository: ${target}.`, line));
         continue;
       }
@@ -421,7 +427,9 @@ export async function validateSharedFacts(repoRoot: string): Promise<Documentati
         ...enabled.map((labels) => labels[locale]),
         ...(manifest?.mcp?.tools ?? []),
         skillFile,
-        manifest?.maturity ? (maturityLabels[manifest.maturity]?.[locale] ?? manifest.maturity) : undefined,
+        manifest?.maturity
+          ? (maturityLabels[manifest.maturity]?.[locale] ?? manifest.maturity)
+          : undefined,
       ].filter((token): token is string => token !== undefined);
       issues.push(...(await requiredTokens(repoRoot, file, tokens)));
     }
@@ -450,17 +458,31 @@ export async function validateSharedFacts(repoRoot: string): Promise<Documentati
     for (const { file, locale } of readmes) {
       const content = await readFile(path.join(repoRoot, file), "utf8").catch(() => "");
       for (const sectionContract of contract.sections ?? []) {
-        const heading = locale === 0 ? sectionContract.englishHeading : sectionContract.chineseHeading;
+        const heading =
+          locale === 0 ? sectionContract.englishHeading : sectionContract.chineseHeading;
         const section = h2Section(content, heading);
         const required =
-          locale === 0 ? sectionContract.englishRequired ?? [] : sectionContract.chineseRequired ?? [];
+          locale === 0
+            ? (sectionContract.englishRequired ?? [])
+            : (sectionContract.chineseRequired ?? []);
         for (const token of required) {
           if (!section.includes(token)) {
-            issues.push(issue("shared-fact", file, `Section ${heading} is missing shared fact: ${token}.`));
+            issues.push(
+              issue("shared-fact", file, `Section ${heading} is missing shared fact: ${token}.`),
+            );
           }
         }
-        if (sectionContract.orderedTokens && !containsInOrder(section, sectionContract.orderedTokens)) {
-          issues.push(issue("shared-fact", file, `${heading} precedence does not match the package contract.`));
+        if (
+          sectionContract.orderedTokens &&
+          !containsInOrder(section, sectionContract.orderedTokens)
+        ) {
+          issues.push(
+            issue(
+              "shared-fact",
+              file,
+              `${heading} precedence does not match the package contract.`,
+            ),
+          );
         }
       }
 
@@ -472,23 +494,56 @@ export async function validateSharedFacts(repoRoot: string): Promise<Documentati
       const automatedSet = new Set(automated);
       for (const scope of automated) {
         if (!compatibility.includes(scope)) {
-          issues.push(issue("shared-fact", file, `Verification section is missing automated scope: ${scope}.`));
+          issues.push(
+            issue(
+              "shared-fact",
+              file,
+              `Verification section is missing automated scope: ${scope}.`,
+            ),
+          );
         }
       }
       for (const scope of AUTOMATED_VERIFICATION_SCOPES) {
         if (!automatedSet.has(scope) && compatibility.includes(scope)) {
-          issues.push(issue("shared-fact", file, `Verification section claims unconfigured automated scope: ${scope}.`));
+          issues.push(
+            issue(
+              "shared-fact",
+              file,
+              `Verification section claims unconfigured automated scope: ${scope}.`,
+            ),
+          );
         }
       }
       const livePolicy = discoveredPackage.agentPlugin?.verification?.liveProviders;
       if (livePolicy && !compatibility.includes(`liveProviders: ${livePolicy}`)) {
-        issues.push(issue("shared-fact", file, `Verification section must declare liveProviders: ${livePolicy}.`));
+        issues.push(
+          issue(
+            "shared-fact",
+            file,
+            `Verification section must declare liveProviders: ${livePolicy}.`,
+          ),
+        );
       }
       if (!/protocol|协议/i.test(compatibility) || !/continuous|持续/.test(compatibility)) {
-        issues.push(issue("shared-fact", file, "Must distinguish protocol compatibility from continuous Host/Provider verification."));
+        issues.push(
+          issue(
+            "shared-fact",
+            file,
+            "Must distinguish protocol compatibility from continuous Host/Provider verification.",
+          ),
+        );
       }
-      if (livePolicy === "manual" && (!/manual|手动/.test(compatibility) || !/billable|计费|费用/.test(compatibility))) {
-        issues.push(issue("shared-fact", file, "Manual live Provider verification must be identified as potentially billable."));
+      if (
+        livePolicy === "manual" &&
+        (!/manual|手动/.test(compatibility) || !/billable|计费|费用/.test(compatibility))
+      ) {
+        issues.push(
+          issue(
+            "shared-fact",
+            file,
+            "Manual live Provider verification must be identified as potentially billable.",
+          ),
+        );
       }
     }
   }
@@ -541,9 +596,11 @@ export async function validateSharedFacts(repoRoot: string): Promise<Documentati
 export async function validateCatalogFreshness(repoRoot: string): Promise<DocumentationIssue[]> {
   try {
     const result = await generateCatalogs({ repoRoot, check: true });
-    return result.stale.sort().map((file) =>
-      issue("catalog-stale", file, "Generated catalog is stale; run npm run catalog:generate."),
-    );
+    return result.stale
+      .sort()
+      .map((file) =>
+        issue("catalog-stale", file, "Generated catalog is stale; run npm run catalog:generate."),
+      );
   } catch (error) {
     return [
       issue(
@@ -565,7 +622,9 @@ function sortIssues(issues: DocumentationIssue[]): DocumentationIssue[] {
   );
 }
 
-export async function validateDocumentation(repoRoot: string): Promise<DocumentationValidationResult> {
+export async function validateDocumentation(
+  repoRoot: string,
+): Promise<DocumentationValidationResult> {
   const root = path.resolve(repoRoot);
   const [internal, language, sections, facts, catalog] = await Promise.all([
     validateInternalLinks(root),
@@ -579,7 +638,8 @@ export async function validateDocumentation(repoRoot: string): Promise<Documenta
 }
 
 export function formatDocumentationResult(result: DocumentationValidationResult): string {
-  if (result.ok) return `Documentation check passed (${result.filesChecked.length} Markdown files).`;
+  if (result.ok)
+    return `Documentation check passed (${result.filesChecked.length} Markdown files).`;
   return result.issues
     .map(({ file, line, code, message }) => `${file}${line ? `:${line}` : ""} [${code}] ${message}`)
     .join("\n");

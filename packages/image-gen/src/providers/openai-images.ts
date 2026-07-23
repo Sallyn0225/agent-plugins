@@ -8,10 +8,7 @@ import type {
   ModelConfig,
 } from "../types.js";
 
-async function parseImagesPayload(
-  json: unknown,
-  signal?: AbortSignal,
-): Promise<GeneratedImage[]> {
+async function parseImagesPayload(json: unknown, signal?: AbortSignal): Promise<GeneratedImage[]> {
   const data = (json as { data?: Array<Record<string, unknown>> }).data;
   if (!Array.isArray(data) || data.length === 0) {
     throw new Error(`OpenAI images API returned no data: ${JSON.stringify(json).slice(0, 500)}`);

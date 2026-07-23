@@ -1,6 +1,6 @@
 # Releasing
 
-Releases are independently versioned per Capability Plugin. The approved release design uses automated publication, with review of the Version Packages pull request and npm Trusted Publishing setup as manual gates. Until that workflow is installed, this document describes the policy rather than an available release command.
+Releases are independently versioned per Capability Plugin. Changesets status is available through `npm run changeset:status`. The approved release design uses automated publication, with review of the Version Packages pull request and npm Trusted Publishing setup as manual gates. Until that workflow is installed, publication remains a policy rather than an available automated release command.
 
 ## Versioning and Changesets
 

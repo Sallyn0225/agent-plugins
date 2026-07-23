@@ -3,10 +3,7 @@ import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js"
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { afterEach, beforeAll, describe, expect, it } from "vitest";
-import {
-  assertBuiltBinaries,
-  mcpSpawnParams,
-} from "./helpers/cli-process.js";
+import { assertBuiltBinaries, mcpSpawnParams } from "./helpers/cli-process.js";
 import {
   createOfflineFixture,
   offlineEnv,
@@ -164,9 +161,7 @@ describe("image-gen MCP Delivery Interface (SDK client over stdio)", () => {
     };
     expect(editSchema?.properties).toHaveProperty("prompt");
     expect(editSchema?.properties).toHaveProperty("images");
-    expect(editSchema?.required ?? []).toEqual(
-      expect.arrayContaining(["prompt", "images"]),
-    );
+    expect(editSchema?.required ?? []).toEqual(expect.arrayContaining(["prompt", "images"]));
   });
 
   it("calls list_image_models successfully", async () => {

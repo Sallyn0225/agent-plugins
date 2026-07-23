@@ -4,10 +4,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { TINY_PNG_BYTES } from "./local-provider-adapter.js";
 
-const PACKAGE_LOCAL_CONFIG = resolve(
-  process.cwd(),
-  "packages/image-gen/config.local.json",
-);
+const PACKAGE_LOCAL_CONFIG = resolve(process.cwd(), "packages/image-gen/config.local.json");
 
 export interface OfflineFixture {
   /** Absolute path to IMAGE_GEN_CONFIG JSON. */
@@ -116,9 +113,7 @@ export function offlineEnv(fixture: OfflineFixture): NodeJS.ProcessEnv {
  * processes can exercise lower-priority config sources (legacy env/dir).
  * The file is gitignored developer state and otherwise outranks legacy fallbacks.
  */
-export async function withPackageLocalConfigHidden<
-  T,
->(fn: () => Promise<T>): Promise<T> {
+export async function withPackageLocalConfigHidden<T>(fn: () => Promise<T>): Promise<T> {
   if (!existsSync(PACKAGE_LOCAL_CONFIG)) {
     return fn();
   }

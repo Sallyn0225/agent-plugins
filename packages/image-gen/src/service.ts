@@ -110,9 +110,11 @@ export function listModels(config = loadConfig()) {
   };
 }
 
-export async function runGenerate(
-  options: RunGenerateOptions,
-): Promise<{ result: GenerateImageResult; summary: ImageJobSummary; imagesBase64: Array<{ data: string; mimeType: string }> }> {
+export async function runGenerate(options: RunGenerateOptions): Promise<{
+  result: GenerateImageResult;
+  summary: ImageJobSummary;
+  imagesBase64: Array<{ data: string; mimeType: string }>;
+}> {
   const config = options.config ?? loadConfig();
   const { alias, modelConfig } = resolveModelConfig(config, options.model);
 
@@ -151,9 +153,11 @@ export async function runGenerate(
   };
 }
 
-export async function runEdit(
-  options: RunEditOptions,
-): Promise<{ result: GenerateImageResult; summary: ImageJobSummary; imagesBase64: Array<{ data: string; mimeType: string }> }> {
+export async function runEdit(options: RunEditOptions): Promise<{
+  result: GenerateImageResult;
+  summary: ImageJobSummary;
+  imagesBase64: Array<{ data: string; mimeType: string }>;
+}> {
   const config = options.config ?? loadConfig();
   const { alias, modelConfig } = resolveModelConfig(config, options.model);
 
@@ -181,9 +185,7 @@ export async function runEdit(
     ? await saveImages(config.outputDir, alias, options.prompt, result.images, "edit")
     : [];
 
-  const inputImages = options.images
-    .map((img) => img.path)
-    .filter((p): p is string => Boolean(p));
+  const inputImages = options.images.map((img) => img.path).filter((p): p is string => Boolean(p));
 
   return {
     result,

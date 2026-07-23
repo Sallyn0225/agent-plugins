@@ -13,18 +13,18 @@ Prefer, in order:
 
 1. Global / PATH after install:
 
-```bash
-image-gen <command>
-# or
-npx -y @sallyn0225/image-gen <command>
-```
+   ```bash
+   image-gen <command>
+   # or
+   npx -y @sallyn0225/image-gen <command>
+   ```
 
 2. Package-local build inside this monorepo:
 
-```bash
-node packages/image-gen/dist/cli.js <command>
-npm run image-gen -- <command>
-```
+   ```bash
+   node packages/image-gen/dist/cli.js <command>
+   npm run image-gen -- <command>
+   ```
 
 If monorepo `dist/` is missing, build first:
 
@@ -109,7 +109,7 @@ image-gen edit \
 ## Model choice guidance
 
 | Goal | Prefer |
-|------|--------|
+| --- | --- |
 | General high-quality generation | `gpt-image-2` |
 | Fast / alternate aesthetic | `grok-imagine-image` |
 | Instruction-following edits / multimodal refs | `gemini-3.1-flash-image` |

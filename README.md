@@ -14,7 +14,7 @@ Package versions are published on npm and are not mirrored here.
 
 | Capability | Package | Maturity | Delivery Interfaces | Verification |
 | --- | --- | --- | --- | --- |
-| Image Generation | [`@sallyn0225/image-gen`](packages/image-gen) | stable | Library, CLI, MCP, Agent Skill | automated: unit, offline-cli, offline-mcp, docs, metadata; manual live Provider smoke only |
+| Image Generation | [`@sallyn0225/image-gen`](packages/image-gen) | stable | Library, CLI, MCP, Agent Skill | automated: unit, offline-cli, offline-mcp, docs, metadata, package-contents; manual live Provider smoke only |
 
 Protocol compatibility of a Delivery Interface is not the same as continuous Host or Provider verification. See each plugin README for what has actually been tested.
 

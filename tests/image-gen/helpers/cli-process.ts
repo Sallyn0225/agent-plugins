@@ -2,8 +2,8 @@ import { spawn } from "node:child_process";
 import { existsSync } from "node:fs";
 import { resolve } from "node:path";
 
-/** Repo root is the vitest cwd (package.json at monorepo root). */
-const REPO_ROOT = resolve(process.cwd());
+/** Resolve the repository independently of the caller's workspace cwd. */
+const REPO_ROOT = resolve(import.meta.dirname, "../../..");
 export const IMAGE_GEN_CLI = resolve(REPO_ROOT, "packages/image-gen/dist/cli.js");
 export const IMAGE_GEN_MCP = resolve(REPO_ROOT, "packages/image-gen/dist/mcp.js");
 
@@ -43,13 +43,7 @@ export interface RunCliOptions {
  */
 export async function runCli(options: RunCliOptions = {}): Promise<CliResult> {
   assertBuiltBinaries();
-  const {
-    args = [],
-    env,
-    cwd = REPO_ROOT,
-    timeoutMs = 30_000,
-    stdin,
-  } = options;
+  const { args = [], env, cwd = REPO_ROOT, timeoutMs = 30_000, stdin } = options;
 
   return new Promise<CliResult>((resolvePromise, reject) => {
     const child = spawn(process.execPath, [IMAGE_GEN_CLI, ...args], {

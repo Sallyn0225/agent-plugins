@@ -19,7 +19,6 @@ export function guessMimeFromPath(path: string): string {
       return "image/webp";
     case ".gif":
       return "image/gif";
-    case ".png":
     default:
       return "image/png";
   }

@@ -36,11 +36,7 @@ describe("agentPlugin schema", () => {
     expect(parsed.id).toBe("image-gen");
     expect(parsed.maturity).toBe("stable");
     expect(parsed.interfaces.mcp).toBe(true);
-    expect(parsed.mcp?.tools).toEqual([
-      "list_image_models",
-      "generate_image",
-      "edit_image",
-    ]);
+    expect(parsed.mcp?.tools).toEqual(["list_image_models", "generate_image", "edit_image"]);
   });
 
   it("rejects manifests that duplicate standard npm fields", () => {

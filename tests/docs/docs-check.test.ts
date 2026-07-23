@@ -27,10 +27,11 @@ describe("docs-check CLI", () => {
     const fixture = await mkdtemp(path.join(tmpdir(), "agent-plugins-docs-cli-"));
     await writeFile(path.join(fixture, "README.md"), "# Broken\n\n[missing](nope.md)\n", "utf8");
 
-    const result = await run(
-      process.execPath,
-      [path.join(repoRoot, "node_modules/tsx/dist/cli.mjs"), "scripts/docs/validate.ts", fixture],
-    );
+    const result = await run(process.execPath, [
+      path.join(repoRoot, "node_modules/tsx/dist/cli.mjs"),
+      "scripts/docs/validate.ts",
+      fixture,
+    ]);
 
     expect(result.code).toBe(1);
     expect(result.stdout).toBe("");

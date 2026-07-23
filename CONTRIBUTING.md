@@ -35,7 +35,7 @@ Never edit generated catalog blocks by hand. Update plugin metadata, run the cat
 
 ## Pull Requests
 
-Use a [Conventional Commit](https://www.conventionalcommits.org/) pull-request title, because squash-merged history uses that title. Explain the problem, the public behavior affected, verification performed, and any compatibility or release impact. Link the approved issue when one exists.
+Use a [Conventional Commit](https://www.conventionalcommits.org/) pull-request title, because squash-merged history uses that title and CI validates it. Explain the problem, the public behavior affected, verification performed, and any compatibility or release impact. Link the approved issue when one exists.
 
 Changesets, not commit messages, are authoritative for package versions and English changelogs. Keep pull requests focused; do not combine unrelated cleanup. CI must pass on Ubuntu and Windows without real Provider credentials or external network access.
 

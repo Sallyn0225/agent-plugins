@@ -41,7 +41,11 @@ describe("documentation validation public seams", () => {
   it("discovers publishable plugin README pairs instead of hard-coding package names", async () => {
     const root = await fixture();
     await write(root, "packages/example/package.json", JSON.stringify({ agentPlugin: {} }));
-    await write(root, "packages/example/README.md", "# Example\n\n> 中文: [README.zh-CN.md](./README.zh-CN.md)\n");
+    await write(
+      root,
+      "packages/example/README.md",
+      "# Example\n\n> 中文: [README.zh-CN.md](./README.zh-CN.md)\n",
+    );
     await write(root, "packages/example/README.zh-CN.md", "# 示例\n");
 
     const [languageIssues, sectionIssues] = await Promise.all([
@@ -101,10 +105,22 @@ describe("documentation validation public seams", () => {
     expect(issues).toEqual(
       expect.arrayContaining([
         expect.objectContaining({ code: "internal-link", file: "README.md" }),
-        expect.objectContaining({ code: "internal-link", message: expect.stringContaining("#not-there") }),
-        expect.objectContaining({ code: "internal-link", message: expect.stringContaining("missing.png") }),
-        expect.objectContaining({ code: "internal-link", message: expect.stringContaining("escapes repository") }),
-        expect.objectContaining({ code: "internal-link", message: expect.stringContaining("Malformed link encoding") }),
+        expect.objectContaining({
+          code: "internal-link",
+          message: expect.stringContaining("#not-there"),
+        }),
+        expect.objectContaining({
+          code: "internal-link",
+          message: expect.stringContaining("missing.png"),
+        }),
+        expect.objectContaining({
+          code: "internal-link",
+          message: expect.stringContaining("escapes repository"),
+        }),
+        expect.objectContaining({
+          code: "internal-link",
+          message: expect.stringContaining("Malformed link encoding"),
+        }),
       ]),
     );
   });
@@ -131,6 +147,12 @@ describe("documentation validation public seams", () => {
       await mkdir(path.dirname(destination), { recursive: true });
       await cp(path.join(repoRoot, relative), destination);
     }
+    const packageJson = path.join(root, "packages/image-gen/package.json");
+    await writeFile(
+      packageJson,
+      (await readFile(packageJson, "utf8")).replace(',\n        "package-contents"', ""),
+      "utf8",
+    );
     const chineseReadme = path.join(root, "packages/image-gen/README.zh-CN.md");
     await writeFile(
       chineseReadme,
@@ -143,8 +165,7 @@ describe("documentation validation public seams", () => {
       englishReadme,
       english
         .replace("1. `IMAGE_GEN_CONFIG`", "1. `IMAGE_GEN_MCP_CONFIG`")
-        .replace("2. `IMAGE_GEN_MCP_CONFIG`", "2. `IMAGE_GEN_CONFIG`")
-        .replace("Manifest verification scopes are", "Manifest verification scopes are `package-contents`,"),
+        .replace("2. `IMAGE_GEN_MCP_CONFIG`", "2. `IMAGE_GEN_CONFIG`"),
       "utf8",
     );
 
@@ -173,7 +194,8 @@ describe("documentation validation public seams", () => {
 
   it("detects stale generated catalogs without rewriting them", async () => {
     const root = await fixture();
-    const stale = "# Agent Plugins\n\n<!-- agent-plugins:catalog:start -->\nold\n<!-- agent-plugins:catalog:end -->\n";
+    const stale =
+      "# Agent Plugins\n\n<!-- agent-plugins:catalog:start -->\nold\n<!-- agent-plugins:catalog:end -->\n";
     await write(root, "README.md", stale);
     await write(root, "README.zh-CN.md", stale);
 

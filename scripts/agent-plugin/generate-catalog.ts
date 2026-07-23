@@ -100,9 +100,7 @@ export async function main(argv = process.argv.slice(2)): Promise<number> {
 
 const isCliEntry =
   process.argv[1] !== undefined &&
-  /generate-catalog\.(ts|js|mts|mjs|cjs)$/.test(
-    process.argv[1].replace(/\\/g, "/"),
-  );
+  /generate-catalog\.(ts|js|mts|mjs|cjs)$/.test(process.argv[1].replace(/\\/g, "/"));
 
 if (isCliEntry) {
   main().then((code) => {

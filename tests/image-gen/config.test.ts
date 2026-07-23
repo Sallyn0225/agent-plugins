@@ -79,8 +79,16 @@ describe("image-gen configuration contracts", () => {
     const preferred = await writeConfig(options.cwd!, "preferred.json", "preferred");
     const mcpAlias = await writeConfig(options.cwd!, "mcp-alias.json", "mcp-alias");
     const legacyEnv = await writeConfig(options.cwd!, "legacy-env.json", "legacy-env");
-    await writeConfig(join(options.homeDir!, ".config", "agent-plugins"), "image-gen.json", "plugins");
-    await writeConfig(join(options.homeDir!, ".config", "agent-tooling"), "image-gen.json", "tooling");
+    await writeConfig(
+      join(options.homeDir!, ".config", "agent-plugins"),
+      "image-gen.json",
+      "plugins",
+    );
+    await writeConfig(
+      join(options.homeDir!, ".config", "agent-tooling"),
+      "image-gen.json",
+      "tooling",
+    );
 
     const config = loadConfig({
       ...options,
@@ -98,7 +106,11 @@ describe("image-gen configuration contracts", () => {
   it("supports IMAGE_GEN_MCP_CONFIG as a brand-neutral alias when IMAGE_GEN_CONFIG is unset", async () => {
     const options = await isolatedOptions();
     const mcpAlias = await writeConfig(options.cwd!, "mcp-alias.json", "mcp-alias");
-    await writeConfig(join(options.homeDir!, ".config", "agent-plugins"), "image-gen.json", "plugins");
+    await writeConfig(
+      join(options.homeDir!, ".config", "agent-plugins"),
+      "image-gen.json",
+      "plugins",
+    );
 
     const config = loadConfig({
       ...options,
@@ -113,8 +125,16 @@ describe("image-gen configuration contracts", () => {
 
   it("prefers the Agent Plugins config directory over the legacy Agent Tooling directory", async () => {
     const options = await isolatedOptions();
-    await writeConfig(join(options.homeDir!, ".config", "agent-plugins"), "image-gen.json", "plugins");
-    await writeConfig(join(options.homeDir!, ".config", "agent-tooling"), "image-gen.json", "tooling");
+    await writeConfig(
+      join(options.homeDir!, ".config", "agent-plugins"),
+      "image-gen.json",
+      "plugins",
+    );
+    await writeConfig(
+      join(options.homeDir!, ".config", "agent-tooling"),
+      "image-gen.json",
+      "tooling",
+    );
 
     const config = loadConfig(options);
 
@@ -143,7 +163,11 @@ describe("image-gen configuration contracts", () => {
 
   it("falls back to the legacy Agent Tooling directory and emits one non-sensitive deprecation warning", async () => {
     const options = await isolatedOptions();
-    await writeConfig(join(options.homeDir!, ".config", "agent-tooling"), "image-gen.json", "tooling");
+    await writeConfig(
+      join(options.homeDir!, ".config", "agent-tooling"),
+      "image-gen.json",
+      "tooling",
+    );
 
     const config = loadConfig(options);
 
@@ -158,8 +182,16 @@ describe("image-gen configuration contracts", () => {
   it("prefers the Agent Plugins directory over a usable legacy Agent Tooling env var", async () => {
     const options = await isolatedOptions();
     const legacyEnv = await writeConfig(options.cwd!, "legacy-env.json", "legacy-env");
-    await writeConfig(join(options.homeDir!, ".config", "agent-plugins"), "image-gen.json", "plugins");
-    await writeConfig(join(options.homeDir!, ".config", "agent-tooling"), "image-gen.json", "tooling");
+    await writeConfig(
+      join(options.homeDir!, ".config", "agent-plugins"),
+      "image-gen.json",
+      "plugins",
+    );
+    await writeConfig(
+      join(options.homeDir!, ".config", "agent-tooling"),
+      "image-gen.json",
+      "tooling",
+    );
 
     const config = loadConfig({
       ...options,
@@ -174,7 +206,11 @@ describe("image-gen configuration contracts", () => {
 
   it("keeps warnings on the warn channel so callers can preserve machine-readable stdout", async () => {
     const options = await isolatedOptions();
-    await writeConfig(join(options.homeDir!, ".config", "agent-tooling"), "image-gen.json", "tooling");
+    await writeConfig(
+      join(options.homeDir!, ".config", "agent-tooling"),
+      "image-gen.json",
+      "tooling",
+    );
     const stdoutSpy = vi.spyOn(process.stdout, "write").mockImplementation(() => true);
 
     try {

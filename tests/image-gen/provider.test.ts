@@ -3,10 +3,7 @@ import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import {
-  editImage,
-  generateImage,
-} from "../../packages/image-gen/src/providers/index.js";
+import { editImage, generateImage } from "../../packages/image-gen/src/providers/index.js";
 import type { ModelConfig } from "../../packages/image-gen/src/types.js";
 
 /** 1x1 transparent PNG */
@@ -120,7 +117,12 @@ function sendJson(res: ServerResponse, status: number, payload: unknown): void {
   res.end(JSON.stringify(payload));
 }
 
-function sendText(res: ServerResponse, status: number, text: string, contentType = "text/plain"): void {
+function sendText(
+  res: ServerResponse,
+  status: number,
+  text: string,
+  contentType = "text/plain",
+): void {
   res.writeHead(status, { "content-type": contentType });
   res.end(text);
 }
@@ -290,7 +292,7 @@ describe("OpenAI-images provider through local HTTP adapter", () => {
   });
 
   it("edits images with multipart form data when the adapter accepts it", async () => {
-    const adapter = await startAdapter((req, res, _body, capture) => {
+    const adapter = await startAdapter((_req, res, _body, capture) => {
       expect(capture.isMultipart).toBe(true);
       expect(capture.contentType).toMatch(/multipart\/form-data/);
       // Multipart body should contain prompt and image field markers
@@ -371,10 +373,7 @@ describe("OpenAI-images provider through local HTTP adapter", () => {
         sendJson(
           res,
           200,
-          openaiImages([
-            { b64_json: TINY_PNG_BASE64 },
-            { b64_json: TINY_PNG_BASE64 },
-          ]),
+          openaiImages([{ b64_json: TINY_PNG_BASE64 }, { b64_json: TINY_PNG_BASE64 }]),
         );
       });
 
@@ -418,7 +417,7 @@ describe("OpenAI-images provider through local HTTP adapter", () => {
 
 describe("Gemini provider through local HTTP adapter", () => {
   it("generates images from generateContent responses", async () => {
-    const adapter = await startAdapter((req, res, _body, capture) => {
+    const adapter = await startAdapter((_req, res, _body, capture) => {
       expect(capture.url).toBe("/v1beta/models/gemini-test:generateContent");
       expect(capture.headers.authorization).toBe("Bearer test-key-not-real");
       expect(capture.headers["x-goog-api-key"]).toBe("test-key-not-real");
@@ -468,9 +467,7 @@ describe("Gemini provider through local HTTP adapter", () => {
       expect(parts[1]?.inlineData?.data).toBe(TINY_PNG_BASE64);
       expect(parts[1]?.inlineData?.mimeType).toBe("image/png");
       expect(parts.some((part) => part.text?.includes("mask"))).toBe(true);
-      expect(
-        parts.filter((part) => part.inlineData?.data === TINY_PNG_BASE64),
-      ).toHaveLength(2);
+      expect(parts.filter((part) => part.inlineData?.data === TINY_PNG_BASE64)).toHaveLength(2);
 
       // Snake_case inline_data is accepted by the provider parser
       sendJson(res, 200, {

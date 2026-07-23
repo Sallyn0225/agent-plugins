@@ -49,15 +49,7 @@ export const README_CONTRACTS: SectionPairContract[] = [
       "Security",
       "License",
     ],
-    chineseSections: [
-      "能力插件",
-      "文档导航",
-      "仓库布局",
-      "安装插件",
-      "参与贡献",
-      "安全",
-      "许可证",
-    ],
+    chineseSections: ["能力插件", "文档导航", "仓库布局", "安装插件", "参与贡献", "安全", "许可证"],
   },
   {
     english: "templates/capability-plugin/README.md",
@@ -97,11 +89,7 @@ export const DOCUMENT_SECTION_CONTRACTS: Record<string, string[]> = {
     "Release Verification",
     "Rollback",
   ],
-  "SECURITY.md": [
-    "Supported Versions",
-    "Reporting a Vulnerability",
-    "Handling Sensitive Data",
-  ],
+  "SECURITY.md": ["Supported Versions", "Reporting a Vulnerability", "Handling Sensitive Data"],
   "CODE_OF_CONDUCT.md": [
     "Our Standards",
     "Unacceptable Behavior",

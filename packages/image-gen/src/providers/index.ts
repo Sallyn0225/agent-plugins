@@ -41,9 +41,4 @@ export async function editImage(
   }
 }
 
-export {
-  editWithGemini,
-  editWithOpenAIImages,
-  generateWithGemini,
-  generateWithOpenAIImages,
-};
+export { editWithGemini, editWithOpenAIImages, generateWithGemini, generateWithOpenAIImages };

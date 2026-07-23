@@ -40,10 +40,7 @@ export function createTimeoutSignal(
   };
 }
 
-export async function parseJsonResponse(
-  response: Response,
-  label: string,
-): Promise<unknown> {
+export async function parseJsonResponse(response: Response, label: string): Promise<unknown> {
   const text = await response.text();
   let json: unknown;
   try {

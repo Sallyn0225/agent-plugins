@@ -130,10 +130,7 @@ export function renderChineseCatalog(plugins: DiscoveredPlugin[]): string {
  * Replace the catalog region in a README, preserving surrounding prose.
  * If markers are missing, append the catalog at the end.
  */
-export function upsertCatalogSection(
-  readme: string,
-  catalogSection: string,
-): string {
+export function upsertCatalogSection(readme: string, catalogSection: string): string {
   const start = readme.indexOf(CATALOG_START);
   const end = readme.indexOf(CATALOG_END);
 
@@ -150,10 +147,7 @@ export function upsertCatalogSection(
   return `${trimmed}\n\n${catalogSection}\n`;
 }
 
-export function isCatalogFresh(
-  readme: string,
-  expectedCatalog: string,
-): boolean {
+export function isCatalogFresh(readme: string, expectedCatalog: string): boolean {
   const start = readme.indexOf(CATALOG_START);
   const end = readme.indexOf(CATALOG_END);
   if (start === -1 || end === -1 || end < start) return false;

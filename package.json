@@ -3,23 +3,31 @@
   "private": true,
   "version": "0.1.0",
   "description": "Host-independent Capability Plugins for coding agents: CLI, MCP, and Agent Skills",
+  "type": "module",
   "workspaces": [
     "packages/*"
   ],
   "scripts": {
+    "format": "biome format --write .",
+    "format:check": "biome format .",
+    "lint": "npm run lint:biome && npm run lint:markdown",
+    "lint:biome": "biome lint --error-on-warnings .",
+    "lint:markdown": "markdownlint-cli2",
     "build": "npm run build --workspaces --if-present",
     "build:image-gen": "npm run build -w @sallyn0225/image-gen",
     "image-gen": "npm run cli -w @sallyn0225/image-gen --",
     "image-gen:mcp": "npm run start -w @sallyn0225/image-gen",
     "typecheck": "tsc -p tsconfig.json && npm run typecheck --workspaces --if-present",
-    "test": "vitest run",
-    "test:offline-smoke": "vitest run tests/image-gen/offline-smoke.test.ts",
-    "smoke:offline": "npm run build && npm run test:offline-smoke",
+    "test": "vitest run && npm run test --workspaces --if-present",
+    "smoke:offline": "npm run build && npm run smoke:offline --workspaces --if-present",
     "smoke:live": "npm run smoke:live -w @sallyn0225/image-gen",
     "validate:plugins": "tsx scripts/agent-plugin/validate.ts",
+    "validate:packages": "tsx scripts/package-contents/validate.ts",
     "catalog:generate": "tsx scripts/agent-plugin/generate-catalog.ts",
     "catalog:check": "tsx scripts/agent-plugin/generate-catalog.ts --check",
     "docs:check": "tsx scripts/docs/validate.ts",
+    "changeset:status": "changeset status",
+    "quality": "npm run format:check && npm run lint && npm run typecheck && npm run build && npm test && npm run smoke:offline && npm run docs:check && npm run validate:plugins && npm run catalog:check && npm run validate:packages && npm run changeset:status",
     "publish:image-gen": "npm publish -w @sallyn0225/image-gen"
   },
   "keywords": [
@@ -43,8 +51,11 @@
     "url": "https://github.com/Sallyn0225/agent-plugins/issues"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.5.5",
+    "@changesets/cli": "^2.31.1",
     "@modelcontextprotocol/sdk": "^1.29.0",
     "@types/node": "^22.20.1",
+    "markdownlint-cli2": "^0.23.1",
     "tsx": "^4.23.1",
     "typescript": "^5.9.3",
     "vitest": "^3.2.7",

@@ -37,16 +37,23 @@ Run commands from the repository root unless a guide explicitly says otherwise.
 
 | Command | Purpose |
 | --- | --- |
-| `npm run build` | Build all workspaces that provide a build script |
+| `npm run format` | Format supported source and configuration files with Biome |
+| `npm run format:check` | Check Biome formatting without writing files |
+| `npm run lint` | Run Biome source linting and Markdownlint style checks |
 | `npm run typecheck` | Type-check repository and workspace TypeScript |
-| `npm test` | Run the Vitest suite |
-| `npm run smoke:offline` | Exercise built public CLI and MCP interfaces without external services |
-| `npm run smoke:live` | Manually contact a real Provider; networked and potentially billable |
+| `npm run build` | Build all workspaces that provide a build script |
+| `npm test` | Run root and workspace test suites |
+| `npm run smoke:offline` | Run workspace offline smoke checks against built public interfaces |
+| `npm run docs:check` | Validate documentation links, structure, and shared facts |
 | `npm run validate:plugins` | Validate plugin metadata and package contracts |
 | `npm run catalog:generate` | Regenerate only marked root catalog sections |
 | `npm run catalog:check` | Check that generated catalogs are current |
+| `npm run validate:packages` | Inspect publishable `npm pack` file lists |
+| `npm run changeset:status` | Report pending package version changes from Changesets |
+| `npm run quality` | Run the complete mandatory, credential-free quality contract |
+| `npm run smoke:live` | Manually contact a real Provider; networked and potentially billable |
 
-The approved repository quality contract also covers formatting, linting, documentation, package contents, and Changesets status. Some of those root gates and cross-platform CI are introduced by follow-up quality/release work; do not treat an unavailable command as a current check.
+The root lifecycle commands discover participating workspaces rather than naming a specific Capability Plugin. Pull-request CI runs the complete quality contract after a clean install on Ubuntu and Windows with Node.js 22.
 
 ## Architecture Rules
 

@@ -12,16 +12,8 @@
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import {
-  assertBuiltBinaries,
-  mcpSpawnParams,
-  runCli,
-} from "./helpers/cli-process.js";
-import {
-  createOfflineFixture,
-  offlineEnv,
-  type OfflineFixture,
-} from "./helpers/fixtures.js";
+import { assertBuiltBinaries, mcpSpawnParams, runCli } from "./helpers/cli-process.js";
+import { createOfflineFixture, offlineEnv, type OfflineFixture } from "./helpers/fixtures.js";
 import {
   LocalProviderAdapter,
   openaiEditSuccessHandler,
@@ -77,13 +69,7 @@ describe("offline smoke (built CLI + MCP vs local Provider adapter)", () => {
 
     adapter.setHandler(openaiEditSuccessHandler());
     const edit = await runCli({
-      args: [
-        "edit",
-        "--no-save",
-        "--image",
-        fixture.inputImagePath,
-        "offline smoke edit",
-      ],
+      args: ["edit", "--no-save", "--image", fixture.inputImagePath, "offline smoke edit"],
       env: offlineEnv(fixture),
       cwd: fixture.cwd,
     });
@@ -144,9 +130,9 @@ describe("offline smoke (built CLI + MCP vs local Provider adapter)", () => {
         arguments: { prompt: "offline smoke mcp generate", save: false },
       });
       expect(gen.isError).not.toBe(true);
-      const genImages = (
-        gen.content as Array<{ type: string; data?: string }>
-      ).filter((c) => c.type === "image");
+      const genImages = (gen.content as Array<{ type: string; data?: string }>).filter(
+        (c) => c.type === "image",
+      );
       expect(genImages).toHaveLength(1);
       expect(genImages[0]?.data).toBe(TINY_PNG_BASE64);
 
@@ -160,9 +146,9 @@ describe("offline smoke (built CLI + MCP vs local Provider adapter)", () => {
         },
       });
       expect(edit.isError).not.toBe(true);
-      const editImages = (
-        edit.content as Array<{ type: string; data?: string }>
-      ).filter((c) => c.type === "image");
+      const editImages = (edit.content as Array<{ type: string; data?: string }>).filter(
+        (c) => c.type === "image",
+      );
       expect(editImages).toHaveLength(1);
 
       expect(stderr).toMatch(/image-gen MCP ready/i);

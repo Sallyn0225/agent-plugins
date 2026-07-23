@@ -1,10 +1,6 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import {
-  discoverPlugins,
-  type DiscoveredPlugin,
-  type PackageJson,
-} from "./discover.js";
+import { discoverPlugins, type DiscoveredPlugin, type PackageJson } from "./discover.js";
 import { pathExists } from "./fs-utils.js";
 
 export type ValidationIssue = {
@@ -59,11 +55,7 @@ function filesIncludes(files: string[] | undefined, relativePath: string): boole
   const normalized = relativePath.replace(/\\/g, "/");
   return files.some((entry) => {
     const e = entry.replace(/\\/g, "/").replace(/\/$/, "");
-    return (
-      normalized === e ||
-      normalized.startsWith(`${e}/`) ||
-      e === normalized.split("/")[0]
-    );
+    return normalized === e || normalized.startsWith(`${e}/`) || e === normalized.split("/")[0];
   });
 }
 
@@ -77,7 +69,7 @@ async function readSkillFrontmatter(
   if (end === -1) return null;
   const yaml = text.slice(3, end).trim();
   const result: { name?: string; description?: string } = {};
-  for (const line of yaml.split("\n")) {
+  for (const line of yaml.split(/\r?\n/)) {
     const m = line.match(/^([A-Za-z0-9_-]+):\s*(.*)$/);
     if (!m) continue;
     const key = m[1];
@@ -88,9 +80,7 @@ async function readSkillFrontmatter(
   return result;
 }
 
-export async function validatePlugin(
-  plugin: DiscoveredPlugin,
-): Promise<ValidationIssue[]> {
+export async function validatePlugin(plugin: DiscoveredPlugin): Promise<ValidationIssue[]> {
   const issues: ValidationIssue[] = [];
   const { packageJson, agentPlugin, packageDir } = plugin;
   const id = agentPlugin.id;
@@ -102,27 +92,18 @@ export async function validatePlugin(
   // --- package naming ---
   const expectedName = `${EXPECTED_SCOPE}${id}`;
   if (packageJson.name !== expectedName) {
-    push(
-      "package-name",
-      `package name must be "${expectedName}", got "${packageJson.name ?? ""}"`,
-    );
+    push("package-name", `package name must be "${expectedName}", got "${packageJson.name ?? ""}"`);
   }
 
   // --- license ---
   if (packageJson.license !== "MIT") {
-    push(
-      "license",
-      `license must be "MIT", got "${packageJson.license ?? ""}"`,
-    );
+    push("license", `license must be "MIT", got "${packageJson.license ?? ""}"`);
   }
 
   // --- repository identity ---
   const repoUrl = repositoryUrl(packageJson);
   if (!repoUrl.includes(EXPECTED_REPO)) {
-    push(
-      "repository",
-      `repository URL must reference ${EXPECTED_REPO}, got "${repoUrl}"`,
-    );
+    push("repository", `repository URL must reference ${EXPECTED_REPO}, got "${repoUrl}"`);
   }
 
   // --- Node engines ---
@@ -130,10 +111,7 @@ export async function validatePlugin(
   if (!engine.raw) {
     push("engines", "package.json engines.node is required");
   } else if (engine.major === null || engine.major < MIN_NODE_MAJOR) {
-    push(
-      "engines",
-      `engines.node must require Node.js ${MIN_NODE_MAJOR}+, got "${engine.raw}"`,
-    );
+    push("engines", `engines.node must require Node.js ${MIN_NODE_MAJOR}+, got "${engine.raw}"`);
   }
 
   // --- CLI binaries when cli interface is enabled ---
@@ -165,10 +143,7 @@ export async function validatePlugin(
   // --- library export surface ---
   if (agentPlugin.interfaces.library) {
     if (!packageJson.main && !packageJson.exports) {
-      push(
-        "library",
-        "interfaces.library is true but package.json has neither main nor exports",
-      );
+      push("library", "interfaces.library is true but package.json has neither main nor exports");
     }
   }
 
@@ -189,10 +164,7 @@ export async function validatePlugin(
           "SKILL.md must follow the open Agent Skills format with name and description frontmatter",
         );
       } else if (frontmatter.name !== id) {
-        push(
-          "skill-name",
-          `SKILL.md name "${frontmatter.name}" must match capability id "${id}"`,
-        );
+        push("skill-name", `SKILL.md name "${frontmatter.name}" must match capability id "${id}"`);
       }
       if (!filesIncludes(packageJson.files, agentPlugin.skill.path)) {
         push(
@@ -214,19 +186,14 @@ export async function validatePlugin(
   if (agentPlugin.maturity === "stable") {
     if (!agentPlugin.verification.automated.includes("metadata")) {
       // soft guidance via issue — metadata validation is required for stable
-      push(
-        "verification",
-        'stable plugins should include "metadata" in verification.automated',
-      );
+      push("verification", 'stable plugins should include "metadata" in verification.automated');
     }
   }
 
   return issues;
 }
 
-export async function validateRepository(
-  repoRoot: string,
-): Promise<ValidationResult> {
+export async function validateRepository(repoRoot: string): Promise<ValidationResult> {
   const plugins = await discoverPlugins(repoRoot);
   const issues: ValidationIssue[] = [];
 
@@ -234,8 +201,7 @@ export async function validateRepository(
     issues.push({
       packageId: "(repository)",
       code: "no-plugins",
-      message:
-        "no publishable packages with agentPlugin metadata were found under packages/",
+      message: "no publishable packages with agentPlugin metadata were found under packages/",
     });
   }
 

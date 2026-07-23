@@ -1,11 +1,7 @@
 import { afterEach, beforeAll, describe, expect, it } from "vitest";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
-import {
-  assertBuiltBinaries,
-  mcpSpawnParams,
-  runCli,
-} from "./helpers/cli-process.js";
+import { assertBuiltBinaries, mcpSpawnParams, runCli } from "./helpers/cli-process.js";
 import {
   createOfflineFixture,
   offlineEnv,
@@ -127,13 +123,7 @@ describe("image-gen CLI process interface (black-box)", () => {
     const fixture = await fixtureFor(adapter);
 
     const result = await runCli({
-      args: [
-        "edit",
-        "--no-save",
-        "--image",
-        fixture.inputImagePath,
-        "make it watercolor",
-      ],
+      args: ["edit", "--no-save", "--image", fixture.inputImagePath, "make it watercolor"],
       env: offlineEnv(fixture),
       cwd: fixture.cwd,
     });

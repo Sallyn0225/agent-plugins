@@ -24,8 +24,7 @@ export const AUTOMATED_VERIFICATION_SCOPES = [
   "docs",
   "metadata",
 ] as const;
-export type AutomatedVerificationScope =
-  (typeof AUTOMATED_VERIFICATION_SCOPES)[number];
+export type AutomatedVerificationScope = (typeof AUTOMATED_VERIFICATION_SCOPES)[number];
 
 export const LIVE_PROVIDER_POLICIES = ["none", "manual", "ci"] as const;
 export type LiveProviderPolicy = (typeof LIVE_PROVIDER_POLICIES)[number];
@@ -96,10 +95,7 @@ export const agentPluginSchema = z
     /** Capability identity; must match `@sallyn0225/<id>` package name suffix */
     id: z
       .string()
-      .regex(
-        /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
-        "id must be lowercase alphanumeric with single hyphens",
-      ),
+      .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "id must be lowercase alphanumeric with single hyphens"),
     displayName: nonEmpty,
     maturity: z.enum(MATURITY_VALUES),
     interfaces: deliveryInterfacesSchema,
@@ -146,13 +142,9 @@ export type SkillManifest = z.infer<typeof skillManifestSchema>;
 export type VerificationManifest = z.infer<typeof verificationManifestSchema>;
 
 export function parseAgentPlugin(input: unknown): AgentPlugin {
-  if (
-    input &&
-    typeof input === "object" &&
-    !Array.isArray(input)
-  ) {
+  if (input && typeof input === "object" && !Array.isArray(input)) {
     for (const key of FORBIDDEN_DUPLICATE_KEYS) {
-      if (Object.prototype.hasOwnProperty.call(input, key)) {
+      if (Object.hasOwn(input, key)) {
         throw new Error(
           `agentPlugin must not duplicate npm field "${key}"; keep it on package.json only`,
         );

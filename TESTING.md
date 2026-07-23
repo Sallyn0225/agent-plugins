@@ -32,13 +32,26 @@ npm run smoke:live
 
 ## Commands
 
+Run the same mandatory contract used by Ubuntu and Windows CI:
+
 ```bash
-npm run typecheck
-npm test
-npm run build
-npm run smoke:offline
-npm run validate:plugins
-npm run catalog:check
+npm run quality
 ```
 
-The approved repository gate additionally includes formatting, linting, documentation validation, package-content validation, and Changesets status. Follow-up quality and release work adds any corresponding root scripts that are not yet available. See [Development](DEVELOPMENT.md) for current command navigation and [the image-gen guide](packages/image-gen/README.md#development) for package-specific checks.
+Its independently reproducible gates are:
+
+```bash
+npm run format:check
+npm run lint
+npm run typecheck
+npm run build
+npm test
+npm run smoke:offline
+npm run docs:check
+npm run validate:plugins
+npm run catalog:check
+npm run validate:packages
+npm run changeset:status
+```
+
+Package-content validation inspects each publishable package's `npm pack` file list. It requires declared public artifacts and rejects tests, fixtures, source trees, local configuration, credentials, and files outside the package allowlist. See [Development](DEVELOPMENT.md) for command navigation and [the image-gen guide](packages/image-gen/README.md#development) for package-specific checks.

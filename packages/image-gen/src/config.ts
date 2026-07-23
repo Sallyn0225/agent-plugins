@@ -29,12 +29,7 @@ export interface LoadConfigOptions {
   warn?: (message: string) => void;
 }
 
-type ConfigSourceKind =
-  | "preferred-env"
-  | "legacy-env"
-  | "preferred-dir"
-  | "legacy-dir"
-  | "other";
+type ConfigSourceKind = "preferred-env" | "legacy-env" | "preferred-dir" | "legacy-dir" | "other";
 
 interface ConfigCandidate {
   path: string;
@@ -87,16 +82,10 @@ function asRecord(value: unknown): Record<string, unknown> | undefined {
   return value as Record<string, unknown>;
 }
 
-function normalizeModelConfig(
-  modelKey: string,
-  raw: Record<string, unknown>,
-): ModelConfig {
+function normalizeModelConfig(modelKey: string, raw: Record<string, unknown>): ModelConfig {
   const baseUrl = asString(raw.baseUrl) ?? asString(raw.base_url) ?? asString(raw.baseURL);
   const apiKey =
-    asString(raw.apiKey) ??
-    asString(raw.api_key) ??
-    asString(raw.key) ??
-    asString(raw.token);
+    asString(raw.apiKey) ?? asString(raw.api_key) ?? asString(raw.key) ?? asString(raw.token);
 
   if (!baseUrl) {
     throw new Error(`Model "${modelKey}" is missing baseUrl`);
@@ -136,10 +125,7 @@ function normalizeModelConfig(
   };
 }
 
-function loadModelsFromObject(
-  modelsRaw: unknown,
-  source: string,
-): Record<string, ModelConfig> {
+function loadModelsFromObject(modelsRaw: unknown, source: string): Record<string, ModelConfig> {
   const modelsObj = asRecord(modelsRaw);
   if (!modelsObj) {
     throw new Error(`${source}: "models" must be an object`);
@@ -240,10 +226,7 @@ function candidateConfigPaths(runtime: {
   return candidates;
 }
 
-function maybeWarnForSource(
-  kind: ConfigSourceKind,
-  warn: (message: string) => void,
-): void {
+function maybeWarnForSource(kind: ConfigSourceKind, warn: (message: string) => void): void {
   if (kind === "legacy-env") {
     warn(LEGACY_ENV_WARNING);
     return;
@@ -268,10 +251,7 @@ function loadConfigFile(options: LoadConfigOptions = {}): {
   return { data: {} };
 }
 
-function applyEnvModelOverrides(
-  models: Record<string, ModelConfig>,
-  env: NodeJS.ProcessEnv,
-): void {
+function applyEnvModelOverrides(models: Record<string, ModelConfig>, env: NodeJS.ProcessEnv): void {
   const sharedBase = env.IMAGE_GEN_BASE_URL;
   const sharedKey = env.IMAGE_GEN_API_KEY;
 
@@ -332,10 +312,7 @@ function applyEnvModelOverrides(
     );
     if (!match) continue;
 
-    const alias = match[1]
-      .toLowerCase()
-      .replace(/__/g, "/")
-      .replace(/_/g, "-");
+    const alias = match[1].toLowerCase().replace(/__/g, "/").replace(/_/g, "-");
     const field = match[2].toUpperCase();
     const entry = generic.get(alias) ?? { alias };
     if (field === "BASE_URL" || field === "BASEURL") {
@@ -357,8 +334,7 @@ function applyEnvModelOverrides(
     if (!baseUrl || !apiKey) continue;
 
     models[entry.alias] = {
-      provider:
-        entry.provider ?? existing?.provider ?? inferProvider(entry.model ?? entry.alias),
+      provider: entry.provider ?? existing?.provider ?? inferProvider(entry.model ?? entry.alias),
       baseUrl,
       apiKey,
       model: entry.model ?? existing?.model ?? entry.alias,

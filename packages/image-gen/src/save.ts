@@ -11,7 +11,6 @@ function extensionFromMime(mimeType: string): string {
       return "webp";
     case "image/gif":
       return "gif";
-    case "image/png":
     default:
       return "png";
   }

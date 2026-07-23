@@ -3,20 +3,8 @@
     {
       "englishHeading": "Configuration",
       "chineseHeading": "配置",
-      "englishRequired": [
-        "gpt-image-2",
-        "openai-images",
-        "gemini",
-        "./generated-images",
-        "180000"
-      ],
-      "chineseRequired": [
-        "gpt-image-2",
-        "openai-images",
-        "gemini",
-        "./generated-images",
-        "180000"
-      ],
+      "englishRequired": ["gpt-image-2", "openai-images", "gemini", "./generated-images", "180000"],
+      "chineseRequired": ["gpt-image-2", "openai-images", "gemini", "./generated-images", "180000"],
       "orderedTokens": [
         "`IMAGE_GEN_CONFIG`",
         "`IMAGE_GEN_MCP_CONFIG`",
@@ -38,16 +26,8 @@
     {
       "englishHeading": "CLI",
       "chineseHeading": "CLI",
-      "englishRequired": [
-        "gpt-image-2",
-        "grok-imagine-image",
-        "gemini-3.1-flash-image"
-      ],
-      "chineseRequired": [
-        "gpt-image-2",
-        "grok-imagine-image",
-        "gemini-3.1-flash-image"
-      ]
+      "englishRequired": ["gpt-image-2", "grok-imagine-image", "gemini-3.1-flash-image"],
+      "chineseRequired": ["gpt-image-2", "grok-imagine-image", "gemini-3.1-flash-image"]
     },
     {
       "englishHeading": "Migration",

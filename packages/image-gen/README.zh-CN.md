@@ -205,7 +205,7 @@ await runEdit({
 
 仓库自动化会离线验证库行为、配置契约、构建后的 CLI 行为、MCP 初始化/工具/协议帧、元数据与文档。Provider 行为通过本地 HTTP 适配器测试，无需外部网络、真实凭据或费用。
 
-清单中的验证范围是 `unit`、`offline-cli`、`offline-mcp`、`docs` 与 `metadata`；在线策略是 `liveProviders: manual`。这些标识是目录元数据，不代表更广泛的测试声明。
+清单中的验证范围是 `unit`、`offline-cli`、`offline-mcp`、`docs`、`metadata` 与 `package-contents`；在线策略是 `liveProviders: manual`。这些标识是目录元数据，不代表更广泛的测试声明。
 
 这些验证证明公共接口与协议行为；它们**不表示**持续在 Claude Code、Codex、Cursor 或其他所有 Host 中测试，也不表示持续连接所有真实网关或 Provider。真实 Provider 冒烟仅手动执行、需要联网，并且可能产生费用。
 

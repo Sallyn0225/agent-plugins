@@ -205,7 +205,7 @@ The interfaces are protocol-oriented:
 
 Repository automation verifies library behavior, configuration contracts, built CLI behavior, MCP initialization/tools/framing, metadata, and documentation offline. Provider behavior is exercised against a local HTTP adapter without external network access, real credentials, or charges.
 
-Manifest verification scopes are `unit`, `offline-cli`, `offline-mcp`, `docs`, and `metadata`; the live policy is `liveProviders: manual`. These identifiers are catalog metadata, not claims of broader testing.
+Manifest verification scopes are `unit`, `offline-cli`, `offline-mcp`, `docs`, `metadata`, and `package-contents`; the live policy is `liveProviders: manual`. These identifiers are catalog metadata, not claims of broader testing.
 
 That verification establishes public-interface and protocol behavior; it does **not** claim continuous testing in Claude Code, Codex, Cursor, or every other Host, nor against every real gateway or Provider. Real-Provider smoke is manual, networked, and potentially billable.
 

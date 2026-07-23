@@ -32,9 +32,7 @@ export type DiscoveredPlugin = {
   agentPlugin: AgentPlugin;
 };
 
-export async function readPackageJson(
-  packageDir: string,
-): Promise<PackageJson> {
+export async function readPackageJson(packageDir: string): Promise<PackageJson> {
   const raw = await readFile(path.join(packageDir, "package.json"), "utf8");
   return JSON.parse(raw) as PackageJson;
 }
@@ -43,9 +41,7 @@ export async function readPackageJson(
  * Discover publishable Capability Plugins under packages/*.
  * A package is a plugin when it is not private and declares `agentPlugin`.
  */
-export async function discoverPlugins(
-  repoRoot: string,
-): Promise<DiscoveredPlugin[]> {
+export async function discoverPlugins(repoRoot: string): Promise<DiscoveredPlugin[]> {
   const packagesDir = path.join(repoRoot, "packages");
   if (!(await pathExists(packagesDir))) {
     return [];
