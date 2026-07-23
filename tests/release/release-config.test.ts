@@ -84,6 +84,27 @@ describe("release configuration", () => {
     expect(attributes).toContain("* text=auto eol=lf");
   });
 
+  it("establishes a local main base ref before running quality on pull requests", async () => {
+    const qualityWorkflow = await readYaml(".github/workflows/quality.yml");
+    const qualityJob = (qualityWorkflow.jobs as Record<string, Record<string, unknown>>).quality;
+    const steps = qualityJob.steps as Array<Record<string, unknown>>;
+
+    const checkoutIndex = steps.findIndex((step) => step.uses === "actions/checkout@v4");
+    const prepareIndex = steps.findIndex(
+      (step) =>
+        typeof step.run === "string" &&
+        step.run.includes("git update-ref refs/heads/main refs/remotes/origin/main"),
+    );
+    const qualityIndex = steps.findIndex((step) => step.run === "npm run quality");
+
+    expect(prepareIndex).toBeGreaterThan(checkoutIndex);
+    expect(prepareIndex).toBeLessThan(qualityIndex);
+    expect(steps[prepareIndex].if).toBe("github.event_name == 'pull_request'");
+    expect(steps[prepareIndex].run).toContain(
+      "git fetch --no-tags origin main:refs/remotes/origin/main",
+    );
+  });
+
   it("checks npm and GitHub Actions dependencies every week", async () => {
     const dependabot = await readYaml(".github/dependabot.yml");
 
