@@ -19,6 +19,7 @@
     "validate:plugins": "tsx scripts/agent-plugin/validate.ts",
     "catalog:generate": "tsx scripts/agent-plugin/generate-catalog.ts",
     "catalog:check": "tsx scripts/agent-plugin/generate-catalog.ts --check",
+    "docs:check": "tsx scripts/docs/validate.ts",
     "publish:image-gen": "npm publish -w @sallyn0225/image-gen"
   },
   "keywords": [

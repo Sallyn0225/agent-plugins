@@ -1,0 +1,77 @@
+{
+  "sections": [
+    {
+      "englishHeading": "Configuration",
+      "chineseHeading": "配置",
+      "englishRequired": [
+        "gpt-image-2",
+        "openai-images",
+        "gemini",
+        "./generated-images",
+        "180000"
+      ],
+      "chineseRequired": [
+        "gpt-image-2",
+        "openai-images",
+        "gemini",
+        "./generated-images",
+        "180000"
+      ],
+      "orderedTokens": [
+        "`IMAGE_GEN_CONFIG`",
+        "`IMAGE_GEN_MCP_CONFIG`",
+        "`./config.local.json`",
+        "`./config.json`",
+        "`./packages/image-gen/config.local.json`",
+        "`./packages/image-gen/config.json`",
+        "`config.local.json`",
+        "`config.json`",
+        "`~/.config/agent-plugins/image-gen.json`",
+        "`AGENT_TOOLING_IMAGE_GEN_CONFIG`",
+        "`~/.config/agent-tooling/image-gen.json`",
+        "`~/.config/image-gen/config.json`",
+        "`~/.config/image-gen-mcp/config.json`",
+        "`~/.image-gen.json`",
+        "`~/.image-gen-mcp.json`"
+      ]
+    },
+    {
+      "englishHeading": "CLI",
+      "chineseHeading": "CLI",
+      "englishRequired": [
+        "gpt-image-2",
+        "grok-imagine-image",
+        "gemini-3.1-flash-image"
+      ],
+      "chineseRequired": [
+        "gpt-image-2",
+        "grok-imagine-image",
+        "gemini-3.1-flash-image"
+      ]
+    },
+    {
+      "englishHeading": "Migration",
+      "chineseHeading": "迁移",
+      "englishRequired": [
+        "IMAGE_GEN_CONFIG",
+        "IMAGE_GEN_MCP_CONFIG",
+        "AGENT_TOOLING_IMAGE_GEN_CONFIG",
+        "~/.config/agent-plugins/image-gen.json",
+        "~/.config/agent-tooling/image-gen.json",
+        "v2",
+        "v3",
+        "stderr"
+      ],
+      "chineseRequired": [
+        "IMAGE_GEN_CONFIG",
+        "IMAGE_GEN_MCP_CONFIG",
+        "AGENT_TOOLING_IMAGE_GEN_CONFIG",
+        "~/.config/agent-plugins/image-gen.json",
+        "~/.config/agent-tooling/image-gen.json",
+        "v2",
+        "v3",
+        "stderr"
+      ]
+    }
+  ]
+}

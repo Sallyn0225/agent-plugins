@@ -49,7 +49,7 @@
     "agent-plugins",
     "agent-skills"
   ],
-  "author": "sallyn0225",
+  "author": "Sallyn0225",
   "license": "MIT",
   "engines": {
     "node": ">=22"
@@ -85,7 +85,6 @@
         "unit",
         "offline-cli",
         "offline-mcp",
-        "package-contents",
         "docs",
         "metadata"
       ],

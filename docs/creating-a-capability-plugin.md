@@ -1,53 +1,38 @@
 # Creating a Capability Plugin
 
-This guide explains how to start a new **Capability Plugin** in the Agent Plugins monorepo.
+This guide applies after a maintainer accepts a new-plugin proposal. Agent Plugins is a self-maintained implementation monorepo, not a third-party plugin index.
 
-A Capability Plugin is an independently versioned module. CLI, MCP, and Agent Skill are optional **Delivery Interfaces**. Do not invent empty adapters only for symmetry.
+## Copy the Template
 
-## 1. Copy the template
-
-The template lives outside the npm workspace so it is never published:
-
-```text
-templates/capability-plugin/
-```
-
-Copy it into the workspace:
+The starter is outside the npm workspace and is never published directly:
 
 ```bash
 cp -R templates/capability-plugin packages/my-capability
 ```
 
-On Windows PowerShell:
+PowerShell:
 
 ```powershell
 Copy-Item -Recurse templates/capability-plugin packages/my-capability
 ```
 
-## 2. Replace placeholders
+Do not add `templates/*` to the root workspaces list.
 
-Replace every placeholder in the new package:
+## Replace Placeholders
 
-| Placeholder | Example |
-| --- | --- |
-| `__CAPABILITY_ID__` | `my-capability` |
-| `__CAPABILITY_DISPLAY_NAME__` | `My Capability` |
-| `__CAPABILITY_DESCRIPTION__` | `Does one useful thing for coding agents.` |
+Replace every `__CAPABILITY_ID__`, `__CAPABILITY_DISPLAY_NAME__`, and `__CAPABILITY_DESCRIPTION__` value. Package names use `@sallyn0225/<id>`; the package suffix, manifest id, Skill directory, and `SKILL.md` frontmatter name must agree.
 
-Rules:
+Keep Node.js 22 or newer, MIT licensing attributed to Sallyn0225, and the Agent Plugins repository identity. Standard npm fields remain authoritative for name, version, description, license, repository, engines, exports, and binaries.
 
-- Package name must be `@sallyn0225/<id>`
-- Capability `id` must match the package name suffix
-- Skill directory name and `SKILL.md` frontmatter `name` must match the capability id
-- License must remain `MIT`
-- `engines.node` must require Node.js 22+
-- Repository URL must reference `github.com/Sallyn0225/agent-plugins`
+## Choose Delivery Interfaces
 
-## 3. Fill in `agentPlugin` metadata
+Library, CLI, MCP, and Agent Skill are optional **Delivery Interfaces**. Enable only interfaces that make the capability useful; never add an empty adapter for symmetry. Keep capability logic in the package core and Delivery Interfaces thin.
 
-`package.json` must include a versioned `agentPlugin` object. Standard npm fields remain authoritative for `name`, `version`, `description`, `license`, `repository`, `engines`, `bin`, and `exports` — do **not** duplicate them inside `agentPlugin`.
+When MCP is enabled, declare `mcp.transport` and stable tool names and ship a real server entry. When Skill is enabled, keep one canonical open Agent Skills copy at `skills/<id>/SKILL.md` and include it in package files.
 
-Minimum shape:
+## Fill in Plugin Metadata
+
+Add the versioned `agentPlugin` object to `package.json`:
 
 ```json
 {
@@ -67,91 +52,46 @@ Minimum shape:
       "path": "skills/my-capability"
     },
     "verification": {
-      "automated": ["unit", "offline-cli", "metadata", "docs", "package-contents"],
+      "automated": ["unit", "offline-cli", "metadata", "docs"],
       "liveProviders": "none"
     }
   }
 }
 ```
 
-### Maturity
+Maturity is `experimental`, `stable`, or `deprecated`. Verification metadata must describe what automation actually checks. Protocol compatibility is not evidence of continuous testing with a real Host or Provider.
 
-- `experimental` — early, may change
-- `stable` — supported public surface
-- `deprecated` — scheduled for removal
+## Documentation Contract
 
-### Delivery Interfaces
+Provide canonical English `README.md` and a complete, structurally aligned `README.zh-CN.md`, with mutual language links at the top. Both documents cover Delivery Interfaces, installation, configuration, CLI, MCP, Library, Agent Skill, compatibility and verification, migration, troubleshooting, development, and license. Mark an inapplicable interface honestly instead of deleting its section.
 
-| Flag | When to set true |
-| --- | --- |
-| `library` | Package exports a programmatic API |
-| `cli` | Package declares `bin` entrypoints |
-| `mcp` | Package exposes MCP tools (also require `mcp.transport` + `mcp.tools`) |
-| `skill` | Package ships an open Agent Skills `SKILL.md` |
+Keep commands and technical facts aligned. English is authoritative when resolving drift. If the plugin has migration rules or ordered technical facts that cannot be derived from `package.json`, add a package-owned `docs-contract.json`; the documentation checker discovers it without hard-coding the plugin at the repository level. Run the documentation checker before review.
 
-### Skill packaging
+## Add Public-Interface Tests
 
-- One canonical Skill copy lives inside the package
-- Path is package-relative, usually `skills/<id>`
-- File must be `SKILL.md` with `name` + `description` frontmatter
-- Include the skill path in `package.json` `files` so it ships in the npm tarball
+Test behavior through the highest practical interface used by a real caller: exported library operations, built CLI processes, MCP over stdio, and Provider behavior through a local adapter. Do not couple tests to private helpers or internal call order.
 
-### Verification
+Required tests are deterministic, offline, credential-free, and cross-platform. Use temporary operating-system directories and synthetic fixtures. Keep live Provider smoke separate, manual, networked, and potentially billable.
 
-- `verification.automated` lists what CI/local automation covers
-- `verification.liveProviders` is `none`, `manual`, or `ci`
-- Protocol compatibility is not the same as continuous Host/Provider verification
-
-## 4. Provide bilingual package READMEs
-
-Every publishable plugin needs:
-
-- `README.md` (canonical English)
-- `README.zh-CN.md` (Chinese counterpart)
-
-Link each to the other at the top.
-
-## 5. Validate and refresh the catalog
+## Validate and Refresh the Catalog
 
 From the repository root:
 
 ```bash
 npm run validate:plugins
+npm run docs:check
 npm run catalog:generate
 npm run catalog:check
+npm run typecheck
+npm test
+npm run build
+npm run smoke:offline
 ```
 
-`validate:plugins` cross-checks:
+The catalog generator rewrites only marked blocks in the root bilingual READMEs. Never edit generated rows by hand and never put package versions in the catalog.
 
-- package naming (`@sallyn0225/<id>`)
-- binaries when CLI is enabled
-- Skill presence and Agent Skills frontmatter
-- Skill inclusion in `files`
-- Node engine baseline
-- MIT license
-- repository identity
-- bilingual README presence
+## Packaging Requirements
 
-`catalog:generate` rewrites only the marked catalog sections in the root READMEs from plugin metadata. It does **not** embed package versions.
+The npm tarball must include built binaries and declarations for enabled interfaces, the canonical Skill when enabled, bilingual READMEs, configuration examples, changelog when present, and MIT license. It must exclude tests, fixtures, credentials, local configuration, generated output, and unrelated development files.
 
-## 6. Optional MCP surface
-
-If you enable MCP:
-
-1. Set `interfaces.mcp` to `true`
-2. Add `mcp.transport` (currently `stdio`) and `mcp.tools`
-3. Ship a real MCP server entry (binary or documented command)
-4. Cover offline MCP behavior in tests when the repository quality gates require it
-
-## 7. Keep the template out of workspaces
-
-Do not add `templates/*` to root `package.json` `workspaces`. The template is scaffolding only.
-
-## Related commands
-
-| Command | Purpose |
-| --- | --- |
-| `npm run validate:plugins` | Validate all Capability Plugin manifests and package contracts |
-| `npm run catalog:generate` | Write generated catalog sections |
-| `npm run catalog:check` | Fail if catalog sections are stale |
-| `npm test` | Run repository tests, including contract tests |
+Add a Changeset for user-visible package changes. Changesets manage independent semantic versions and English changelogs; a Conventional Commit pull-request title does not replace a Changeset. See [Development](../DEVELOPMENT.md), [Testing](../TESTING.md), [Architecture](architecture.md), and [Releasing](../RELEASING.md).

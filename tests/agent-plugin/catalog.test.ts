@@ -3,6 +3,7 @@ import {
   CATALOG_END,
   CATALOG_START,
   isCatalogFresh,
+  renderChineseCatalog,
   renderEnglishCatalog,
   upsertCatalogSection,
 } from "../../scripts/agent-plugin/catalog.js";
@@ -54,6 +55,17 @@ describe("catalog generation", () => {
     expect(section).toContain("stable");
     expect(section).not.toMatch(/1\.1\.1/);
     expect(section).toContain("not the same as continuous Host or Provider verification");
+  });
+
+  it("renders the aligned Chinese catalog from the same metadata", () => {
+    const section = renderChineseCatalog([pluginFixture()]);
+    expect(section).toContain("Image Generation");
+    expect(section).toContain("`@sallyn0225/image-gen`");
+    expect(section).toContain("稳定");
+    expect(section).toContain("库、CLI、MCP、Agent Skill");
+    expect(section).toContain("仅手动在线 Provider 冒烟");
+    expect(section).not.toMatch(/1\.1\.1/);
+    expect(section).toContain("协议兼容性并不等于已对真实 Host 或 Provider 做持续验证");
   });
 
   it("replaces only the catalog markers and keeps surrounding prose", () => {

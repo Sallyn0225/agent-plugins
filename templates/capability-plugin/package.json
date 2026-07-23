@@ -52,8 +52,7 @@
         "unit",
         "offline-cli",
         "metadata",
-        "docs",
-        "package-contents"
+        "docs"
       ],
       "liveProviders": "none"
     }
