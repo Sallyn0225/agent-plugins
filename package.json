@@ -28,7 +28,7 @@
     "docs:check": "tsx scripts/docs/validate.ts",
     "changeset:status": "changeset status",
     "quality": "npm run format:check && npm run lint && npm run typecheck && npm run build && npm test && npm run smoke:offline && npm run docs:check && npm run validate:plugins && npm run catalog:check && npm run validate:packages && npm run changeset:status",
-    "publish:image-gen": "npm publish -w @sallyn0225/image-gen"
+    "release": "changeset publish"
   },
   "keywords": [
     "mcp",
@@ -59,6 +59,7 @@
     "tsx": "^4.23.1",
     "typescript": "^5.9.3",
     "vitest": "^3.2.7",
+    "yaml": "^2.9.0",
     "zod": "^3.25.76"
   }
 }
