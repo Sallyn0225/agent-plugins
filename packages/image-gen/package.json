@@ -32,6 +32,7 @@
     "dev": "tsx src/cli.ts",
     "dev:mcp": "tsx src/mcp.ts",
     "smoke": "node scripts/smoke.mjs",
+    "smoke:live": "node scripts/smoke.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "prepare": "npm run build"
   },

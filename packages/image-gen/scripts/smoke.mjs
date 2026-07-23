@@ -1,3 +1,13 @@
+/**
+ * LIVE / MANUAL smoke against real image Providers.
+ *
+ * Networked and potentially billable. Requires real credentials in config.
+ * Never run as a required pull-request check.
+ *
+ * For deterministic offline verification of built CLI + MCP binaries, use:
+ *   npm run smoke:offline
+ * (from the repository root)
+ */
 import { runEdit, runGenerate, listModels } from "../dist/service.js";
 
 const cmd = process.argv[2] || "generate";
