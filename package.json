@@ -61,7 +61,7 @@
     "markdownlint-cli2": "^0.23.1",
     "tsx": "^4.23.1",
     "typescript": "^5.9.3",
-    "vitest": "^3.2.7",
+    "vitest": "^4.1.10",
     "yaml": "^2.9.0",
     "zod": "^3.25.76"
   }
