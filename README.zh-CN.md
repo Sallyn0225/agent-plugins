@@ -15,6 +15,7 @@
 | 能力 | 包 | 成熟度 | 交付接口 | 验证范围 |
 | --- | --- | --- | --- | --- |
 | Image Generation | [`@sallyn0225/image-gen`](packages/image-gen) | 稳定 | 库、CLI、MCP、Agent Skill | 自动化：unit、offline-cli、offline-mcp、docs、metadata、package-contents；仅手动在线 Provider 冒烟 |
+| Video Generation | [`@sallyn0225/video-gen`](packages/video-gen) | 实验性 | 库、CLI、Agent Skill | 自动化：unit、offline-cli、docs、metadata、package-contents；仅手动在线 Provider 冒烟 |
 
 交付接口的协议兼容性并不等于已对真实 Host 或 Provider 做持续验证。各插件 README 会说明实际测过什么。
 

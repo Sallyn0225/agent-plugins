@@ -1,0 +1,59 @@
+{
+  "sections": [
+    {
+      "englishHeading": "Configuration",
+      "chineseHeading": "配置",
+      "englishRequired": [
+        "VIDEO_GEN_CONFIG",
+        "VIDEO_GEN_API_KEY",
+        "ARK_API_KEY",
+        "./generated-videos",
+        "600000",
+        "15000",
+        "https://ark.cn-beijing.volces.com/api/v3"
+      ],
+      "chineseRequired": [
+        "VIDEO_GEN_CONFIG",
+        "VIDEO_GEN_API_KEY",
+        "ARK_API_KEY",
+        "./generated-videos",
+        "600000",
+        "15000",
+        "https://ark.cn-beijing.volces.com/api/v3"
+      ],
+      "orderedTokens": [
+        "`VIDEO_GEN_CONFIG`",
+        "`config.local.json`",
+        "`~/.config/agent-plugins/video-gen.json`"
+      ]
+    },
+    {
+      "englishHeading": "CLI",
+      "chineseHeading": "CLI",
+      "englishRequired": [
+        "doubao-seedance-2-0-260128",
+        "doubao-seedance-2-0-fast-260128",
+        "doubao-seedance-2-0-mini-260615",
+        "generate",
+        "status",
+        "download",
+        "models"
+      ],
+      "chineseRequired": [
+        "doubao-seedance-2-0-260128",
+        "doubao-seedance-2-0-fast-260128",
+        "doubao-seedance-2-0-mini-260615",
+        "generate",
+        "status",
+        "download",
+        "models"
+      ]
+    },
+    {
+      "englishHeading": "MCP",
+      "chineseHeading": "MCP",
+      "englishRequired": ["not provided", "v1"],
+      "chineseRequired": ["不提供", "v1"]
+    }
+  ]
+}

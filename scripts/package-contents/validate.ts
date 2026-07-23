@@ -68,7 +68,7 @@ const FORBIDDEN_PATHS: Array<[string, RegExp]> = [
   ["local-config", /(^|\/)(config\.local\.[^/]+|[^/]+\.local\.[^/]+)$/i],
   ["credentials", /(^|\/)(\.env(?:\..*)?|credentials?(?:\.[^/]+)?|secrets?(?:\.[^/]+)?|\.npmrc)$/i],
   ["development-file", /(^|\/)(tsconfig(?:\.[^/]+)?\.json|vitest\.config\.[^/]+)(\/|$)/i],
-  ["generated-output", /(^|\/)generated-images(\/|$)/i],
+  ["generated-output", /(^|\/)generated-(images|videos)(\/|$)/i],
 ];
 
 export function validatePackedFileList(
