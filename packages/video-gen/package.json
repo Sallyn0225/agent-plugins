@@ -1,0 +1,93 @@
+{
+  "name": "@sallyn0225/video-gen",
+  "version": "0.1.0",
+  "description": "Volcengine Ark Seedance 2.0 video generation CLI + Agent Skill (text-to-video, image-to-video, multimodal refs)",
+  "type": "module",
+  "bin": {
+    "video-gen": "dist/cli.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./cli": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "skills",
+    "config.example.json",
+    "README.md",
+    "README.zh-CN.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "cli": "node dist/cli.js",
+    "dev": "tsx src/cli.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "prepare": "npm run build",
+    "smoke:offline": "vitest run --root ../.. tests/video-gen/offline-smoke.test.ts"
+  },
+  "keywords": [
+    "cli",
+    "video-generation",
+    "seedance",
+    "volcengine",
+    "ark",
+    "text-to-video",
+    "agent-plugins",
+    "agent-skills"
+  ],
+  "author": "Sallyn0225",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "agentPlugin": {
+    "schemaVersion": 1,
+    "id": "video-gen",
+    "displayName": "Video Generation",
+    "maturity": "experimental",
+    "interfaces": {
+      "library": true,
+      "cli": true,
+      "mcp": false,
+      "skill": true
+    },
+    "skill": {
+      "format": "agent-skills",
+      "path": "skills/video-gen"
+    },
+    "verification": {
+      "automated": [
+        "unit",
+        "offline-cli",
+        "docs",
+        "metadata",
+        "package-contents"
+      ],
+      "liveProviders": "manual"
+    }
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^22.15.30",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sallyn0225/agent-plugins.git",
+    "directory": "packages/video-gen"
+  },
+  "homepage": "https://github.com/Sallyn0225/agent-plugins/tree/main/packages/video-gen#readme",
+  "bugs": {
+    "url": "https://github.com/Sallyn0225/agent-plugins/issues"
+  }
+}

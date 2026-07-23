@@ -15,8 +15,10 @@
     "lint:markdown": "markdownlint-cli2",
     "build": "npm run build --workspaces --if-present",
     "build:image-gen": "npm run build -w @sallyn0225/image-gen",
+    "build:video-gen": "npm run build -w @sallyn0225/video-gen",
     "image-gen": "npm run cli -w @sallyn0225/image-gen --",
     "image-gen:mcp": "npm run start -w @sallyn0225/image-gen",
+    "video-gen": "npm run cli -w @sallyn0225/video-gen --",
     "typecheck": "tsc -p tsconfig.json && npm run typecheck --workspaces --if-present",
     "test": "vitest run && npm run test --workspaces --if-present",
     "smoke:offline": "npm run build && npm run smoke:offline --workspaces --if-present",
@@ -36,6 +38,7 @@
     "coding-agent",
     "cli",
     "image-generation",
+    "video-generation",
     "agent-plugins"
   ],
   "license": "MIT",

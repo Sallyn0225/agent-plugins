@@ -1,0 +1,8 @@
+{
+  "baseUrl": "https://ark.cn-beijing.volces.com/api/v3",
+  "apiKey": "your-ark-api-key",
+  "defaultModel": "doubao-seedance-2-0-260128",
+  "outputDir": "./generated-videos",
+  "timeoutMs": 600000,
+  "pollIntervalMs": 15000
+}
