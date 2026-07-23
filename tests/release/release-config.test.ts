@@ -69,6 +69,21 @@ describe("release configuration", () => {
     expect(rawWorkflow).not.toMatch(/NPM_TOKEN|NODE_AUTH_TOKEN|npm_[A-Za-z0-9]{20,}/);
   });
 
+  it("checks out complete LF-normalized history for cross-platform Changesets status", async () => {
+    const qualityWorkflow = await readYaml(".github/workflows/quality.yml");
+    const attributes = await readFile(path.join(repoRoot, ".gitattributes"), "utf8");
+    const qualityJob = (qualityWorkflow.jobs as Record<string, Record<string, unknown>>).quality;
+    const steps = qualityJob.steps as Array<Record<string, unknown>>;
+
+    expect(steps).toContainEqual(
+      expect.objectContaining({
+        uses: "actions/checkout@v4",
+        with: { "fetch-depth": 0 },
+      }),
+    );
+    expect(attributes).toContain("* text=auto eol=lf");
+  });
+
   it("checks npm and GitHub Actions dependencies every week", async () => {
     const dependabot = await readYaml(".github/dependabot.yml");
 
