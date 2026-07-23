@@ -1,6 +1,6 @@
 {
   "name": "@sallyn0225/video-gen",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Volcengine Ark Seedance 2.0 video generation CLI + Agent Skill (text-to-video, image-to-video, multimodal refs)",
   "type": "module",
   "bin": {
