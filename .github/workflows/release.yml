@@ -34,7 +34,7 @@ jobs:
       - name: Install an OIDC-capable npm CLI
         run: npm install --global npm@11.18.0
       - name: Create Version Packages pull request or publish
-        uses: changesets/action@v1
+        uses: changesets/action@v2
         with:
           publish: npm run release
           title: "chore: version packages"
